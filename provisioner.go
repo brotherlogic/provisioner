@@ -5,11 +5,15 @@ import (
 	"fmt"
 	"io/ioutil"
 	"log"
+	"os"
+	"time"
 
 	"github.com/brotherlogic/goserver"
+	"github.com/brotherlogic/goserver/utils"
 	"golang.org/x/net/context"
 	"google.golang.org/grpc"
 
+	epb "github.com/brotherlogic/executor/proto"
 	pbg "github.com/brotherlogic/goserver/proto"
 )
 
@@ -53,6 +57,38 @@ func (s *Server) GetState() []*pbg.State {
 	}
 }
 
+func fileExists(filename string) bool {
+	info, err := os.Stat(filename)
+	if os.IsNotExist(err) {
+		return false
+	}
+	return !info.IsDir()
+}
+
+func (s *Server) validateEtc() {
+	if fileExists("/etc/init.d/etcd") {
+		return
+	}
+
+	ctx, cancel := utils.ManualContext("provision-etc", "provision-etc", time.Minute, true)
+	defer cancel()
+
+	conn, err := s.FDialSpecificServer(ctx, "executor", s.Registry.Identifier)
+	if err != nil {
+		log.Fatalf("Unable to dial executor: %v", err)
+	}
+	defer conn.Close()
+
+	client := epb.NewExecutorServiceClient(conn)
+	_, err = client.QueueExecute(ctx, &epb.ExecuteRequest{Command: &epb.Command{Binary: "sudo", Parameters: []string{"apt", "install", "etcd"}}})
+	if err != nil {
+		log.Fatalf("Unable to run execute: %v", err)
+	}
+}
+
+func (s *Server) validateEtcConfig() {
+}
+
 func main() {
 	var quiet = flag.Bool("quiet", false, "Show all output")
 	flag.Parse()
@@ -70,6 +106,8 @@ func main() {
 	if err != nil {
 		return
 	}
+
+	server.validateEtc()
 
 	fmt.Printf("%v", server.Serve())
 }
