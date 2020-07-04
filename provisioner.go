@@ -117,7 +117,7 @@ func (s *Server) validateEtcConfig() {
 		}
 	}
 
-	f, err := os.OpenFile("text.log", os.O_APPEND|os.O_WRONLY, 0644)
+	f, err := os.OpenFile("/etc/default/etcd", os.O_APPEND|os.O_WRONLY, 0644)
 	if err != nil {
 		log.Fatalf("%v", err)
 	}
