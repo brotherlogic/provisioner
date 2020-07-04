@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bufio"
 	"flag"
 	"fmt"
 	"io/ioutil"
@@ -99,6 +100,30 @@ func (s *Server) validateEtc() {
 }
 
 func (s *Server) validateEtcConfig() {
+	file, err := os.Open("/etc/default/etcd")
+	defer file.Close()
+
+	if err != nil {
+		log.Fatalf("failed opening file: %s", err)
+	}
+
+	scanner := bufio.NewScanner(file)
+	scanner.Split(bufio.ScanLines)
+
+	for scanner.Scan() {
+		if scanner.Text() == "ETCD_UNSUPPORTED_ARCH=arm" {
+			return
+		}
+	}
+
+	f, err := os.OpenFile("text.log", os.O_APPEND|os.O_WRONLY, 0644)
+	if err != nil {
+		log.Fatalf("%v", err)
+	}
+	defer f.Close()
+	if _, err := f.WriteString("ETCD_UNSUPPORTED_ARCH=arm\n"); err != nil {
+		log.Fatalf("%v", err)
+	}
 }
 
 func main() {
