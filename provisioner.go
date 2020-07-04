@@ -90,6 +90,7 @@ func (s *Server) validateEtc() {
 
 	for r.GetStatus() != epb.CommandStatus_COMPLETE {
 		time.Sleep(time.Second)
+		s.Log(fmt.Sprintf("Result %v", r))
 	}
 
 	s.Log("Installed etcd")
