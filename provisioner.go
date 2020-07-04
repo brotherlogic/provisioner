@@ -147,6 +147,7 @@ func main() {
 	go func() {
 		time.Sleep(time.Second * 5)
 		server.validateEtc()
+		server.validateEtcConfig()
 	}()
 
 	fmt.Printf("%v", server.Serve())
