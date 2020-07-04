@@ -67,6 +67,7 @@ func fileExists(filename string) bool {
 
 func (s *Server) validateEtc() {
 	if fileExists("/etc/init.d/etcd") {
+		s.Log("Not installing etcd")
 		return
 	}
 
@@ -116,6 +117,7 @@ func main() {
 	}
 
 	go func() {
+		time.Sleep(time.Second * 5)
 		server.validateEtc()
 	}()
 
