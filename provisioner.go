@@ -80,7 +80,7 @@ func (s *Server) validateEtc() {
 	defer conn.Close()
 
 	client := epb.NewExecutorServiceClient(conn)
-	r, err = client.QueueExecute(ctx, &epb.ExecuteRequest{Command: &epb.Command{Binary: "sudo", Parameters: []string{"apt", "install", "etcd"}}})
+	r, err := client.QueueExecute(ctx, &epb.ExecuteRequest{Command: &epb.Command{Binary: "sudo", Parameters: []string{"apt", "install", "etcd"}}})
 	if err != nil {
 		log.Fatalf("Unable to run execute: %v", err)
 	}
