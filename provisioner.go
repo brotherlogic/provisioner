@@ -73,22 +73,24 @@ func (s *Server) validateEtc() {
 
 	s.Log("Installing etcd")
 
-	ctx, cancel := utils.ManualContext("provision-etc", "provision-etc", time.Minute, true)
-	defer cancel()
-
-	conn, err := s.FDialSpecificServer(ctx, "executor", s.Registry.Identifier)
-	if err != nil {
-		log.Fatalf("Unable to dial executor: %v", err)
-	}
-	defer conn.Close()
-
-	client := epb.NewExecutorServiceClient(conn)
-	r, err := client.QueueExecute(ctx, &epb.ExecuteRequest{Command: &epb.Command{Binary: "sudo", Parameters: []string{"apt", "install", "etcd"}}})
-	if err != nil {
-		log.Fatalf("Unable to run execute: %v", err)
-	}
-
+	r := &epb.ExecuteResponse{}
 	for r.GetStatus() != epb.CommandStatus_COMPLETE {
+
+		ctx, cancel := utils.ManualContext("provision-etc", "provision-etc", time.Minute, true)
+		defer cancel()
+
+		conn, err := s.FDialSpecificServer(ctx, "executor", s.Registry.Identifier)
+		if err != nil {
+			log.Fatalf("Unable to dial executor: %v", err)
+		}
+		defer conn.Close()
+
+		client := epb.NewExecutorServiceClient(conn)
+		r, err := client.QueueExecute(ctx, &epb.ExecuteRequest{Command: &epb.Command{Binary: "sudo", Parameters: []string{"apt", "install", "etcd"}}})
+		if err != nil {
+			s.Log(fmt.Sprintf("Unable to run execute: %v", err))
+		}
+
 		time.Sleep(time.Second)
 		s.Log(fmt.Sprintf("Result %v", r))
 	}
