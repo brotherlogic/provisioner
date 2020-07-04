@@ -70,6 +70,8 @@ func (s *Server) validateEtc() {
 		return
 	}
 
+	s.Log("Installing etcd")
+
 	ctx, cancel := utils.ManualContext("provision-etc", "provision-etc", time.Minute, true)
 	defer cancel()
 
