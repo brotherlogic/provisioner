@@ -100,6 +100,7 @@ func (s *Server) validateEtc() {
 }
 
 func (s *Server) validateEtcConfig() {
+	s.Log(fmt.Sprintf("Setting config"))
 	file, err := os.Open("/etc/default/etcd")
 	defer file.Close()
 
@@ -124,6 +125,8 @@ func (s *Server) validateEtcConfig() {
 	if _, err := f.WriteString("ETCD_UNSUPPORTED_ARCH=arm\n"); err != nil {
 		log.Fatalf("%v", err)
 	}
+
+	s.Log(fmt.Sprintf("Config complete"))
 }
 
 func main() {
@@ -147,6 +150,7 @@ func main() {
 	go func() {
 		time.Sleep(time.Second * 5)
 		server.validateEtc()
+		time.Sleep(time.Second * 5)
 		server.validateEtcConfig()
 	}()
 
