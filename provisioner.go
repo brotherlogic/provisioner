@@ -113,7 +113,9 @@ func main() {
 		return
 	}
 
-	server.validateEtc()
+	go func() {
+		server.validateEtc()
+	}()
 
 	fmt.Printf("%v", server.Serve())
 }
