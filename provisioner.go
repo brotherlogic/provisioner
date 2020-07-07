@@ -138,6 +138,7 @@ func (s *Server) validateRPI() {
 	cmd := exec.Command("go", "get", "-u", "github.com/lukasmalkmus/rpi_exporter")
 	err := cmd.Run()
 	s.Log(fmt.Sprintf("Ran command: %v", err))
+	time.Sleep(time.Second * 10)
 
 	cmd = exec.Command("mv", "/root/go/bin/rpi_exporter", "/home/simon/rpi_exporter")
 	err = cmd.Run()
