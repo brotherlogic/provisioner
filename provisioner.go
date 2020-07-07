@@ -158,6 +158,17 @@ func (s *Server) validateRPI() {
 	err = cmd.Run()
 }
 
+func (s *Server) validateNodeExporter() {
+	if fileExists("/usr/bin/prometheus-node-exporter") {
+		return
+	}
+
+	time.Sleep(time.Second * 10)
+	cmd := exec.Command("apt", "install", "prometheus-node-exporter")
+	err := cmd.Run()
+	s.Log(fmt.Sprintf("Ran command: %v", err))
+}
+
 func main() {
 	var quiet = flag.Bool("quiet", false, "Show all output")
 	flag.Parse()
@@ -183,6 +194,8 @@ func main() {
 		server.validateEtcConfig()
 		time.Sleep(time.Second * 5)
 		server.validateRPI()
+		time.Sleep(time.Second * 5)
+		server.validateNodeExporter()
 	}()
 
 	fmt.Printf("%v", server.Serve())
