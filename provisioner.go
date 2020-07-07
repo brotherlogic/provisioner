@@ -164,7 +164,7 @@ func (s *Server) validateNodeExporter() {
 	}
 
 	time.Sleep(time.Second * 10)
-	cmd := exec.Command("apt", "install", "prometheus-node-exporter")
+	cmd := exec.Command("apt", "install", "-y", "prometheus-node-exporter")
 	err := cmd.Run()
 	s.Log(fmt.Sprintf("Ran command: %v", err))
 }
