@@ -153,6 +153,9 @@ func (s *Server) validateRPI() {
 		log.Fatalf("%v", err)
 	}
 
+	// Restart to trigger crontab
+	cmd = exec.Command("reboot")
+	err = cmd.Run()
 }
 
 func main() {
