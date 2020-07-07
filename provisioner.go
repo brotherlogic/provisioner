@@ -114,6 +114,7 @@ func (s *Server) validateEtcConfig() {
 
 	for scanner.Scan() {
 		if scanner.Text() == "ETCD_UNSUPPORTED_ARCH=arm" {
+			s.Log(fmt.Sprintf("Config exists"))
 			return
 		}
 	}
@@ -132,6 +133,7 @@ func (s *Server) validateEtcConfig() {
 
 func (s *Server) validateRPI() {
 	if fileExists("/home/simon/rpi_exporter") {
+		s.Log(fmt.Sprintf("Not installing rpi exporter"))
 		return
 	}
 
@@ -160,6 +162,7 @@ func (s *Server) validateRPI() {
 
 func (s *Server) validateNodeExporter() {
 	if fileExists("/usr/bin/prometheus-node-exporter") {
+		s.Log(fmt.Sprintf("Not installing node exporter"))
 		return
 	}
 
