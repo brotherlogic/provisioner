@@ -7,6 +7,7 @@ import (
 	"io/ioutil"
 	"log"
 	"os"
+	"os/exec"
 	"time"
 
 	"github.com/brotherlogic/goserver"
@@ -129,6 +130,16 @@ func (s *Server) validateEtcConfig() {
 	s.Log(fmt.Sprintf("Config complete"))
 }
 
+func (s *Server) validateRPI() {
+	if fileExists("/home/simon/rpi_exporter") {
+		return
+	}
+
+	cmd := exec.Command("go", "get", "-u", "github.com/lukasmalkmus/rpi_exporter")
+	err := cmd.Run()
+	s.Log(fmt.Sprintf("Ran command: %v", err))
+}
+
 func main() {
 	var quiet = flag.Bool("quiet", false, "Show all output")
 	flag.Parse()
@@ -152,6 +163,8 @@ func main() {
 		server.validateEtc()
 		time.Sleep(time.Second * 5)
 		server.validateEtcConfig()
+		time.Sleep(time.Second * 5)
+		server.validateRPI()
 	}()
 
 	fmt.Printf("%v", server.Serve())
