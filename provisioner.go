@@ -200,7 +200,7 @@ func main() {
 		time.Sleep(time.Second * 5)
 		server.validateNodeExporter()
 
-		s.Log(fmt.Sprintf("Completed provisioner run"))
+		server.Log(fmt.Sprintf("Completed provisioner run"))
 	}()
 
 	fmt.Printf("%v", server.Serve())
