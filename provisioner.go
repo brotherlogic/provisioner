@@ -199,6 +199,8 @@ func main() {
 		server.validateRPI()
 		time.Sleep(time.Second * 5)
 		server.validateNodeExporter()
+
+		server.Log(fmt.Sprintf("Completed provisioner run"))
 	}()
 
 	fmt.Printf("%v", server.Serve())
