@@ -138,6 +138,20 @@ func (s *Server) validateRPI() {
 	cmd := exec.Command("go", "get", "-u", "github.com/lukasmalkmus/rpi_exporter")
 	err := cmd.Run()
 	s.Log(fmt.Sprintf("Ran command: %v", err))
+
+	cmd = exec.Command("mv", "/root/go/bin/rpi_exporter", "/home/simon/rpi_exporter")
+	err = cmd.Run()
+	s.Log(fmt.Sprintf("Ran copy: %v", err))
+
+	f, err := os.OpenFile("/var/spool/cron/crontabs/simon", os.O_APPEND|os.O_WRONLY, 0644)
+	if err != nil {
+		log.Fatalf("%v", err)
+	}
+	defer f.Close()
+	if _, err := f.WriteString("@reboot sudo /home/simon/rpi_exporter\n"); err != nil {
+		log.Fatalf("%v", err)
+	}
+
 }
 
 func main() {
