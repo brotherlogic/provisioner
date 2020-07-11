@@ -1,0 +1,7 @@
+syntax = "proto3";
+
+package provisioner;
+
+message Cluster {
+  string url = 1;
+}

@@ -17,6 +17,7 @@ import (
 
 	epb "github.com/brotherlogic/executor/proto"
 	pbg "github.com/brotherlogic/goserver/proto"
+	pb "github.com/brotherlogic/provisioner/proto"
 )
 
 //Server main server type
@@ -100,7 +101,7 @@ func (s *Server) validateEtc() {
 	s.Log("Installed etcd")
 }
 
-func (s *Server) validateEtcConfig() {
+func (s *Server) validateEtcConfig(id string) {
 	file, err := os.Open("/etc/default/etcd")
 	defer file.Close()
 
@@ -125,6 +126,25 @@ func (s *Server) validateEtcConfig() {
 	}
 	defer f.Close()
 	if _, err := f.WriteString("ETCD_UNSUPPORTED_ARCH=arm\n"); err != nil {
+		log.Fatalf("%v", err)
+	}
+
+	if _, err := f.WriteString(fmt.Sprintf("ETCD_ADVERTISE_CLIENT_URLS=\"http://%v:2379\"\n", s.Registry.GetIp())); err != nil {
+		log.Fatalf("%v", err)
+	}
+	if _, err := f.WriteString(fmt.Sprintf("ETCD_INITIAL_ADVERTISE_PEER_URLS=\"http://%v:2380\"\n", s.Registry.GetIp())); err != nil {
+		log.Fatalf("%v", err)
+	}
+	if _, err := f.WriteString(fmt.Sprintf("ETCD_LISTEN_CLIENT_URLS=\"http://%v:2379,http://localhost:2379\"\n", s.Registry.GetIp())); err != nil {
+		log.Fatalf("%v", err)
+	}
+	if _, err := f.WriteString(fmt.Sprintf("ETCD_LISTEN_PEER_URLS=\"http://%v:2380\"\n", s.Registry.GetIp())); err != nil {
+		log.Fatalf("%v", err)
+	}
+	if _, err := f.WriteString(fmt.Sprintf("ETCD_NAME=\"%v\"\n", s.Registry.GetIdentifier())); err != nil {
+		log.Fatalf("%v", err)
+	}
+	if _, err := f.WriteString(fmt.Sprintf("ETCD_DISCOVERY=https://discovery.etcd.io/%v\n", id)); err != nil {
 		log.Fatalf("%v", err)
 	}
 
@@ -189,8 +209,14 @@ func (s *Server) validateEtcRunsOnStartup() {
 	s.Log(fmt.Sprintf("Running etcd: %v", err))
 }
 
+const (
+	// ID the id of the thing
+	ID = "/github.com/brotherlogic/provisioner/id"
+)
+
 func main() {
 	var quiet = flag.Bool("quiet", false, "Show all output")
+	var init = flag.String("init", "", "Show all output")
 	flag.Parse()
 
 	//Turn off logging
@@ -202,16 +228,34 @@ func main() {
 	server.PrepServer()
 	server.Register = server
 
+	if len(*init) > 0 {
+		ctx, cancel := utils.ManualContext("prov-init", "prov-init", time.Minute, false)
+		defer cancel()
+
+		err := server.KSclient.Save(ctx, ID, &pb.Cluster{Url: os.Args[1]})
+		fmt.Printf("Initialised with %v: %v\n", os.Args[1], err)
+		return
+	}
+
 	err := server.RegisterServerV2("provisioner", false, true)
 	if err != nil {
 		return
 	}
 
 	go func() {
+		ctx, cancel := utils.ManualContext("prov", "prov", time.Minute, false)
+		defer cancel()
+		data, _, err := server.KSclient.Read(ctx, ID, &pb.Cluster{})
+		if err != nil {
+			server.Log(fmt.Sprintf("Error on read: %v", err))
+			return
+		}
+		cluster := data.(*pb.Cluster)
+
 		time.Sleep(time.Second * 5)
 		server.validateEtc()
 		time.Sleep(time.Second * 5)
-		server.validateEtcConfig()
+		server.validateEtcConfig(cluster.GetUrl())
 		time.Sleep(time.Second * 5)
 		server.validateRPI()
 		time.Sleep(time.Second * 5)
