@@ -101,7 +101,6 @@ func (s *Server) validateEtc() {
 }
 
 func (s *Server) validateEtcConfig() {
-	s.Log(fmt.Sprintf("Setting config"))
 	file, err := os.Open("/etc/default/etcd")
 	defer file.Close()
 
@@ -119,6 +118,7 @@ func (s *Server) validateEtcConfig() {
 		}
 	}
 
+	s.Log(fmt.Sprintf("Setting config"))
 	f, err := os.OpenFile("/etc/default/etcd", os.O_APPEND|os.O_WRONLY, 0644)
 	if err != nil {
 		log.Fatalf("%v", err)
@@ -172,6 +172,17 @@ func (s *Server) validateNodeExporter() {
 	s.Log(fmt.Sprintf("Ran command: %v", err))
 }
 
+func (s *Server) validateEtcRunsOnStartup() {
+	if fileExists("/etc/systemd/system/etcd2.service") {
+		s.Log(fmt.Sprintf("Not enabling etcd"))
+	}
+
+	time.Sleep(time.Second * 5)
+	cmd := exec.Command("update-rc.d", "etcd", "enable")
+	err := cmd.Run()
+	s.Log(fmt.Sprintf("Updated rcd: %v", err))
+}
+
 func main() {
 	var quiet = flag.Bool("quiet", false, "Show all output")
 	flag.Parse()
@@ -199,6 +210,8 @@ func main() {
 		server.validateRPI()
 		time.Sleep(time.Second * 5)
 		server.validateNodeExporter()
+		time.Sleep(time.Second * 5)
+		server.validateEtcRunsOnStartup()
 
 		server.Log(fmt.Sprintf("Completed provisioner run"))
 	}()
