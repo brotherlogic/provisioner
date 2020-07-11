@@ -210,6 +210,7 @@ func (s *Server) validateEtcRunsOnStartup() {
 }
 
 const (
+	// ID the id of the thing
 	ID = "/github.com/brotherlogic/provisioner/id"
 )
 
