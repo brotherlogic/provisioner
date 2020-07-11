@@ -184,7 +184,7 @@ func (s *Server) validateEtcRunsOnStartup() {
 	s.Log(fmt.Sprintf("Updated rcd: %v", err))
 
 	time.Sleep(time.Second * 5)
-	cmd := exec.Command("/etc/init.d/etcd", "start")
+	cmd = exec.Command("/etc/init.d/etcd", "start")
 	err = cmd.Run()
 	s.Log(fmt.Sprintf("Running etcd: %v", err))
 }
