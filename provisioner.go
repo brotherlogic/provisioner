@@ -232,8 +232,8 @@ func main() {
 		ctx, cancel := utils.ManualContext("prov-init", "prov-init", time.Minute, false)
 		defer cancel()
 
-		err := server.KSclient.Save(ctx, ID, &pb.Cluster{Url: os.Args[1]})
-		fmt.Printf("Initialised with %v: %v\n", os.Args[1], err)
+		err := server.KSclient.Save(ctx, ID, &pb.Cluster{Url: os.Args[2]})
+		fmt.Printf("Initialised with %v: %v\n", os.Args[2], err)
 		return
 	}
 
