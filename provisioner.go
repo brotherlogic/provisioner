@@ -175,12 +175,18 @@ func (s *Server) validateNodeExporter() {
 func (s *Server) validateEtcRunsOnStartup() {
 	if fileExists("/etc/systemd/system/etcd2.service") {
 		s.Log(fmt.Sprintf("Not enabling etcd"))
+		return
 	}
 
 	time.Sleep(time.Second * 5)
 	cmd := exec.Command("update-rc.d", "etcd", "enable")
 	err := cmd.Run()
 	s.Log(fmt.Sprintf("Updated rcd: %v", err))
+
+	time.Sleep(time.Second * 5)
+	cmd = exec.Command("/etc/init.d/etcd", "start")
+	err = cmd.Run()
+	s.Log(fmt.Sprintf("Running etcd: %v", err))
 }
 
 func main() {
