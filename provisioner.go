@@ -17,7 +17,6 @@ import (
 
 	epb "github.com/brotherlogic/executor/proto"
 	pbg "github.com/brotherlogic/goserver/proto"
-	pb "github.com/brotherlogic/provisioner/proto"
 )
 
 //Server main server type
@@ -101,7 +100,7 @@ func (s *Server) validateEtc() {
 	s.Log("Installed etcd")
 }
 
-func (s *Server) validateEtcConfig(id string) {
+func (s *Server) validateEtcConfig() {
 	file, err := os.Open("/etc/default/etcd")
 	defer file.Close()
 
@@ -141,12 +140,6 @@ func (s *Server) validateEtcConfig(id string) {
 	if _, err := f.WriteString(fmt.Sprintf("ETCD_LISTEN_PEER_URLS=\"http://%v:2380\"\n", s.Registry.GetIp())); err != nil {
 		log.Fatalf("%v", err)
 	}
-	if _, err := f.WriteString(fmt.Sprintf("ETCD_NAME=\"%v\"\n", s.Registry.GetIdentifier())); err != nil {
-		log.Fatalf("%v", err)
-	}
-	if _, err := f.WriteString(fmt.Sprintf("ETCD_DISCOVERY=https://discovery.etcd.io/%v\n", id)); err != nil {
-		log.Fatalf("%v", err)
-	}
 
 	s.Log(fmt.Sprintf("Config complete"))
 }
@@ -178,6 +171,25 @@ func (s *Server) validateRPI() {
 	// Restart to trigger crontab
 	cmd = exec.Command("reboot")
 	err = cmd.Run()
+}
+
+func (s *Server) confirmVM() {
+	cmd := exec.Command("sysctl", "vm.dirty_ratio")
+	b, err := cmd.Output()
+
+	if err != nil {
+		s.Log(fmt.Sprintf("Error in vm confirm: %v", err))
+		return
+	}
+
+	if string(b) == "vm.dirty_ratio = 10" {
+		return
+	}
+
+	s.Log(fmt.Sprintf("Setting the dirty ratio"))
+	exec.Command("sysctl", "-w", "vm.dirty_ratio=10").Run()
+	exec.Command("sysctl", "-w", "vm.dirty_background_ratio=5").Run()
+	exec.Command("sysctl", "-p").Run()
 }
 
 func (s *Server) validateNodeExporter() {
@@ -216,7 +228,6 @@ const (
 
 func main() {
 	var quiet = flag.Bool("quiet", false, "Show all output")
-	var init = flag.String("init", "", "Show all output")
 	flag.Parse()
 
 	//Turn off logging
@@ -228,40 +239,25 @@ func main() {
 	server.PrepServer()
 	server.Register = server
 
-	if len(*init) > 0 {
-		ctx, cancel := utils.ManualContext("prov-init", "prov-init", time.Minute, false)
-		defer cancel()
-
-		err := server.KSclient.Save(ctx, ID, &pb.Cluster{Url: os.Args[2]})
-		fmt.Printf("Initialised with %v: %v\n", os.Args[2], err)
-		return
-	}
-
 	err := server.RegisterServerV2("provisioner", false, true)
 	if err != nil {
 		return
 	}
 
 	go func() {
-		ctx, cancel := utils.ManualContext("prov", "prov", time.Minute, false)
-		defer cancel()
-		data, _, err := server.KSclient.Read(ctx, ID, &pb.Cluster{})
-		if err != nil {
-			server.Log(fmt.Sprintf("Error on read: %v", err))
-			return
-		}
-		cluster := data.(*pb.Cluster)
-
 		time.Sleep(time.Second * 5)
 		server.validateEtc()
 		time.Sleep(time.Second * 5)
-		server.validateEtcConfig(cluster.GetUrl())
+		//server.validateEtcConfig()
 		time.Sleep(time.Second * 5)
 		server.validateRPI()
 		time.Sleep(time.Second * 5)
 		server.validateNodeExporter()
 		time.Sleep(time.Second * 5)
 		server.validateEtcRunsOnStartup()
+		time.Sleep(time.Second * 5)
+		server.confirmVM()
+		time.Sleep(time.Second * 5)
 
 		server.Log(fmt.Sprintf("Completed provisioner run"))
 	}()

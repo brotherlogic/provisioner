@@ -2,6 +2,12 @@ syntax = "proto3";
 
 package provisioner;
 
-message Cluster {
-  string url = 1;
+message ClusterRequest {}
+
+message ClusterResponse {
+  string to_add = 1;
+}
+
+service CluserService {
+  rpc Cluster(ClusterRequest) returns (ClusterResponse) {};
 }
