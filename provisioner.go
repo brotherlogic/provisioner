@@ -8,6 +8,7 @@ import (
 	"log"
 	"os"
 	"os/exec"
+	"strings"
 	"time"
 
 	"github.com/brotherlogic/goserver"
@@ -228,6 +229,13 @@ func (s *Server) installGo() {
 	}
 
 	s.Log(fmt.Sprintf("Result: '%v'", string(b)))
+	elems := strings.Fields(string(b))
+	if elems[2] != "go1.12.14" {
+		err := exec.Command("curl", "https://raw.githubusercontent.com/brotherlogic/provisioner/master/goscript.sh", ">", "/home/simon/goscript.sh").Run()
+		if err != nil {
+			log.Fatalf("Unable to download install script: %v", err)
+		}
+	}
 }
 
 const (
