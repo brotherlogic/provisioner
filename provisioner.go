@@ -241,7 +241,7 @@ func (s *Server) installGo() {
 			log.Fatalf("Unable to chmod: %v", err)
 		}
 
-		err = exec.Command("/home/simon/goscript.sh").Run()
+		err = exec.Command("bash", "/home/simon/goscript.sh").Run()
 		if err != nil {
 			log.Fatalf("Bad install: %v", err)
 		}
