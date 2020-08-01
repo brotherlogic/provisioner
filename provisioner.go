@@ -228,12 +228,22 @@ func (s *Server) installGo() {
 		log.Fatalf("Unable to get output: %v", err)
 	}
 
-	s.Log(fmt.Sprintf("Result: '%v'", string(b)))
 	elems := strings.Fields(string(b))
 	if elems[2] != "go1.12.14" {
+		s.Log(fmt.Sprintf("Installing new go version: '%v'", string(b)))
 		err := exec.Command("curl", "https://raw.githubusercontent.com/brotherlogic/provisioner/master/goscript.sh", "-o", "/home/simon/goscript.sh").Run()
 		if err != nil {
 			log.Fatalf("Unable to download install script: %v", err)
+		}
+
+		err = exec.Command("chmod", "u+x", "/home/simon/goscript.sh").Run()
+		if err != nil {
+			log.Fatalf("Unable to chmod: %v", err)
+		}
+
+		err = exec.Command("/home/simon/goscript.sh").Run()
+		if err != nil {
+			log.Fatalf("Bad install: %v", err)
 		}
 	}
 }
