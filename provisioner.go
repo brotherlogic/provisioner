@@ -221,6 +221,15 @@ func (s *Server) validateEtcRunsOnStartup() {
 	s.Log(fmt.Sprintf("Running etcd: %v", err))
 }
 
+func (s *Server) installGo() {
+	b, err := exec.Command("go", "version").Output()
+	if err != nil {
+		log.Fatalf("Unable to get output: %v", err)
+	}
+
+	s.Log(fmt.Sprintf("Result: '%v'", string(b)))
+}
+
 const (
 	// ID the id of the thing
 	ID = "/github.com/brotherlogic/provisioner/id"
@@ -258,6 +267,7 @@ func main() {
 		time.Sleep(time.Second * 5)
 		server.confirmVM()
 		time.Sleep(time.Second * 5)
+		server.installGo()
 
 		server.Log(fmt.Sprintf("Completed provisioner run"))
 	}()
