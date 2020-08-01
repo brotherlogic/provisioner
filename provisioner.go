@@ -222,7 +222,7 @@ func (s *Server) validateEtcRunsOnStartup() {
 }
 
 func (s *Server) installGo() {
-	b, err := cmd.Output()
+	b, err := exec.Command("go", "version").Output()
 	if err != nil {
 		log.Fatalf("Unable to get output: %v", err)
 	}
