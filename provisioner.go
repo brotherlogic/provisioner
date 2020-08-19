@@ -265,6 +265,7 @@ func main() {
 	server := Init()
 	server.PrepServer()
 	server.Register = server
+	server.DiskLog = true
 
 	err := server.RegisterServerV2("provisioner", false, true)
 	if err != nil {
