@@ -245,6 +245,8 @@ func (s *Server) installGo() {
 		if err != nil {
 			log.Fatalf("Bad install: %v", err)
 		}
+	} else {
+		s.Log(fmt.Sprintf("Not installing go"))
 	}
 }
 
@@ -317,7 +319,7 @@ func main() {
 		server.installGo()
 		time.Sleep(time.Second * 5)
 		server.prepDisks()
-
+		time.Sleep(time.Second * 5)
 		server.Log(fmt.Sprintf("Completed provisioner run"))
 	}()
 
