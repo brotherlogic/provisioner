@@ -260,13 +260,12 @@ func (s *Server) prepDisks() {
 	}
 
 	lines := strings.Split(string(b), "\n")
-	s.Log(fmt.Sprintf("LINES %v", len(lines)))
 	for _, line := range lines {
 		fields := strings.Fields(line)
 
 		// This is the WD passport drive
 
-		if len(fields) >= 4 && fields[3] == "part" && fields[2] == "238.5G" {
+		if len(fields) >= 6 && fields[5] == "part" && fields[3] == "238.5G" {
 			s.Log(fmt.Sprintf("Found WD Disk: %v", line))
 		}
 	}
