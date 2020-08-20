@@ -264,9 +264,14 @@ func (s *Server) prepDisks() {
 		fields := strings.Fields(line)
 
 		// This is the WD passport drive
-		s.Log(fmt.Sprintf("%v - %v", fields[5], fields[3]))
+		found := false
 		if len(fields) >= 6 && fields[5] == "part" && fields[3] == "238.5G" {
 			s.Log(fmt.Sprintf("Found WD Disk: %v", line))
+			found = true
+		}
+
+		if !found {
+			s.Log(fmt.Sprintf("No disk found"))
 		}
 	}
 }
