@@ -259,9 +259,9 @@ func (s *Server) procDatastoreDisk(name string, needsFormat bool, needsMount boo
 	s.Log(fmt.Sprintf("Working on %v, with view to formatting %v and mounting %v", name, needsFormat, needsMount))
 
 	if needsFormat {
-		err := exec.Command("mkfs.ext4", fmt.Sprintf("/dev/%v", name))
+		b, err := exec.Command("mkfs.ext4", fmt.Sprintf("/dev/%v", name)).Output()
 		if err != nil {
-			log.Fatalf("Bad format: %v", err)
+			log.Fatalf("Bad format: %v -> %v", err, string(b))
 		}
 	}
 }
