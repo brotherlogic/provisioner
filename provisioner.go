@@ -259,12 +259,12 @@ func (s *Server) prepDisks() {
 		log.Fatalf("Bad run of lsblk: %v", err)
 	}
 
+	found := false
 	lines := strings.Split(string(b), "\n")
 	for _, line := range lines {
 		fields := strings.Fields(line)
 
 		// This is the WD passport drive
-		found := false
 		if len(fields) >= 6 && fields[5] == "part" && fields[3] == "238.5G" {
 			s.Log(fmt.Sprintf("Found WD Disk: %v", line))
 			found = true
@@ -274,10 +274,12 @@ func (s *Server) prepDisks() {
 			s.Log(fmt.Sprintf("%v and %v", fields[3], fields[5]))
 		}
 
-		if !found {
-			s.Log(fmt.Sprintf("No disk found"))
-		}
 	}
+
+	if !found {
+		s.Log(fmt.Sprintf("No disk found"))
+	}
+
 }
 
 func main() {
