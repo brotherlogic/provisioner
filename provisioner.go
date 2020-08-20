@@ -290,6 +290,41 @@ func (s *Server) procDatastoreDisk(name string, needsFormat bool, needsMount boo
 	}
 }
 
+func (s *Server) procScratchDisk(name string, needsFormat bool, needsMount bool) {
+	s.Log(fmt.Sprintf("Working on for scratch %v, with view to formatting %v and mounting %v", name, needsFormat, needsMount))
+
+	if needsFormat {
+		b, err := exec.Command("mkfs.ext4", fmt.Sprintf("/dev/%v", name)).Output()
+		if err != nil {
+			log.Fatalf("Bad format: %v -> %v", err, string(b))
+		}
+	}
+
+	if needsMount {
+		err := exec.Command("mkdir", "/media/scratch").Run()
+		if err != nil {
+			log.Fatalf("%v", err)
+		}
+		err = exec.Command("chown", "simon:simon", "/media/scratch").Run()
+		if err != nil {
+			log.Fatalf("%v", err)
+		}
+		f, err := os.OpenFile("/etc/fstab", os.O_APPEND|os.O_WRONLY, 0644)
+		if err != nil {
+			log.Fatalf("%v", err)
+		}
+		defer f.Close()
+		if _, err := f.WriteString(fmt.Sprintf("/dev/%v   /media/scratch  ext4  defaults,nofail,nodelalloc  1  2\n", name)); err != nil {
+			log.Fatalf("%v", err)
+		}
+
+		err = exec.Command("mount", "/media/scratch").Run()
+		if err != nil {
+			log.Fatalf("%v", err)
+		}
+	}
+}
+
 func (s *Server) prepDisks() {
 	b, err := exec.Command("lsblk", "-o", "NAME,FSTYPE,SIZE,TYPE,MOUNTPOINT").Output()
 	if err != nil {
@@ -306,6 +341,13 @@ func (s *Server) prepDisks() {
 			found = true
 			s.procDatastoreDisk(fields[0][strings.Index(fields[0], "sd"):], len(fields) != 4, len(fields) != 5)
 		}
+
+		// This is the smaller samsung key drive
+		if len(fields) >= 3 && fields[len(fields)-1] == "part" && (fields[len(fields)-2] == "29.9") {
+			found = true
+			s.procScratchDisk(fields[0][strings.Index(fields[0], "sd"):], len(fields) != 4, len(fields) != 5)
+		}
+
 	}
 
 	if !found {
