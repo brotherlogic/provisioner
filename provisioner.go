@@ -259,8 +259,8 @@ func (s *Server) prepDisks() {
 		log.Fatalf("Bad run of lsblk: %v", err)
 	}
 
-	lines := strings.Split(string(b), "\n")
-	s.Log(fmt.Sprintf("%v", lines))
+	lines := strings.Split(string(b), `\n`)
+	s.Log(fmt.Sprintf("LINES %v", len(lines)))
 	for _, line := range lines {
 		fields := strings.Fields(line)
 
