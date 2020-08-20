@@ -258,6 +258,8 @@ const (
 func (s *Server) procDatastoreDisk(name string, needsFormat bool, needsMount bool) {
 	s.Log(fmt.Sprintf("Working on %v, with view to formatting %v and mounting %v", name, needsFormat, needsMount))
 
+	return
+
 	if needsFormat {
 		b, err := exec.Command("mkfs.ext4", fmt.Sprintf("/dev/%v", name)).Output()
 		if err != nil {
@@ -301,10 +303,10 @@ func (s *Server) prepDisks() {
 	for _, line := range lines {
 		fields := strings.Fields(line)
 
-		// This is the WD passport drive
-		if len(fields) >= 3 && fields[len(fields)-1] == "part" && fields[len(fields)-2] == "238.5G" {
+		// This is the WD passport drive or the samsung key drive
+		if len(fields) >= 3 && fields[len(fields)-1] == "part" && (fields[len(fields)-2] == "238.5G" || fields[len(fields)-2] == "239G") {
 			found = true
-			s.procDatastoreDisk(fields[0][strings.Index(fields[0], "sda"):], len(fields) != 4, len(fields) != 5)
+			s.procDatastoreDisk(fields[0][strings.Index(fields[0], "sd"):], len(fields) != 4, len(fields) != 5)
 		}
 	}
 
