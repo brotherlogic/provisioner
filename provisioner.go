@@ -255,7 +255,7 @@ const (
 	ID = "/github.com/brotherlogic/provisioner/id"
 )
 
-func (s *Server) procDisk(name string, needsFormat bool) {
+func (s *Server) procDatastoreDisk(name string, needsFormat bool) {
 	time.Sleep(time.Second * 2)
 	s.Log(fmt.Sprintf("Working on %v, with view to formatting %v", name, needsFormat))
 }
@@ -274,7 +274,7 @@ func (s *Server) prepDisks() {
 		// This is the WD passport drive
 		if len(fields) >= 3 && fields[len(fields)-1] == "part" && fields[len(fields)-2] == "238.5G" {
 			found = true
-			s.procDisk(fields[0][2:], len(fields) != 4)
+			s.procDatastoreDisk(fields[0][strings.Index(fields[0], "/dev/"):], len(fields) != 4)
 		}
 	}
 
