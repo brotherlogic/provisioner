@@ -343,7 +343,7 @@ func (s *Server) prepDisks() {
 		}
 
 		// This is the smaller samsung key drive
-		if len(fields) >= 3 && fields[len(fields)-1] == "part" && (fields[len(fields)-2] == "29.9") {
+		if len(fields) >= 3 && fields[len(fields)-1] == "part" && (fields[len(fields)-2] == "29.9G") {
 			found = true
 			s.procScratchDisk(fields[0][strings.Index(fields[0], "sd"):], len(fields) != 4, len(fields) != 5)
 		}
