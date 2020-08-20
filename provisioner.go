@@ -264,6 +264,30 @@ func (s *Server) procDatastoreDisk(name string, needsFormat bool, needsMount boo
 			log.Fatalf("Bad format: %v -> %v", err, string(b))
 		}
 	}
+
+	if needsMount {
+		err := exec.Command("mkdir", "/media/datastore").Run()
+		if err != nil {
+			log.Fatalf("%v", err)
+		}
+		err = exec.Command("chown", "simon:simon", "/media/datastore").Run()
+		if err != nil {
+			log.Fatalf("%v", err)
+		}
+		f, err := os.OpenFile("/etc/fstab", os.O_APPEND|os.O_WRONLY, 0644)
+		if err != nil {
+			log.Fatalf("%v", err)
+		}
+		defer f.Close()
+		if _, err := f.WriteString(fmt.Sprintf("/dev/%v   /media/datastore  ext4  defaults,nofail,nodelalloc  1  2\n", name)); err != nil {
+			log.Fatalf("%v", err)
+		}
+
+		err = exec.Command("mount", "/media/datastore").Run()
+		if err != nil {
+			log.Fatalf("%v", err)
+		}
+	}
 }
 
 func (s *Server) prepDisks() {
