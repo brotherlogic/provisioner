@@ -258,8 +258,6 @@ const (
 func (s *Server) procDatastoreDisk(name string, needsFormat bool, needsMount bool) {
 	s.Log(fmt.Sprintf("Working on %v, with view to formatting %v and mounting %v", name, needsFormat, needsMount))
 
-	return
-
 	if needsFormat {
 		b, err := exec.Command("mkfs.ext4", fmt.Sprintf("/dev/%v", name)).Output()
 		if err != nil {
