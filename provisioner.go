@@ -270,6 +270,10 @@ func (s *Server) prepDisks() {
 			found = true
 		}
 
+		if len(fields) >= 6 {
+			s.Log(fmt.Sprintf("%v and %v", fields[3], fields[5]))
+		}
+
 		if !found {
 			s.Log(fmt.Sprintf("No disk found"))
 		}
