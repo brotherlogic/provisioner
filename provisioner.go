@@ -253,8 +253,12 @@ const (
 	ID = "/github.com/brotherlogic/provisioner/id"
 )
 
+func (s *Server) procDisk(name string, needsFormat bool) {
+	s.Log(fmt.Sprintf("Working on %v, with view to formatting %v", name, needsFormat))
+}
+
 func (s *Server) prepDisks() {
-	b, err := exec.Command("lsblk").Output()
+	b, err := exec.Command("lsblk", "-o", "NAME,FSTYPE,SIZE,TYPE").Output()
 	if err != nil {
 		log.Fatalf("Bad run of lsblk: %v", err)
 	}
@@ -265,16 +269,15 @@ func (s *Server) prepDisks() {
 		fields := strings.Fields(line)
 
 		// This is the WD passport drive
-		if len(fields) >= 6 && fields[5] == "part" && fields[3] == "238.5G" {
-			s.Log(fmt.Sprintf("Found WD Disk: %v", line))
+		if len(fields) >= 3 && fields[len(fields)-1] == "part" && fields[len(fields)-2] == "238.5G" {
 			found = true
+			s.procDisk(fields[0], len(fields) == 4)
 		}
 	}
 
 	if !found {
 		s.Log(fmt.Sprintf("No disk found"))
 	}
-
 }
 
 func main() {
