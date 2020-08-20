@@ -256,10 +256,10 @@ const (
 )
 
 func (s *Server) procDatastoreDisk(name string, needsFormat bool, needsMount bool) {
-	s.Log(fmt.Sprintf("Working on %v, with view to formatting %v", name, needsFormat))
+	s.Log(fmt.Sprintf("Working on %v, with view to formatting %v and mounting %v", name, needsFormat, needsMount))
 
 	if needsFormat {
-		_, err := exec.Command("mkfs.ext4", fmt.Sprintf("/dev/%v", name))
+		err := exec.Command("mkfs.ext4", fmt.Sprintf("/dev/%v", name))
 		if err != nil {
 			log.Fatalf("Bad format: %v", err)
 		}
@@ -267,7 +267,7 @@ func (s *Server) procDatastoreDisk(name string, needsFormat bool, needsMount boo
 }
 
 func (s *Server) prepDisks() {
-	b, err := exec.Command("lsblk", "-o", "NAME,FSTYPE,SIZE,TYPE").Output()
+	b, err := exec.Command("lsblk", "-o", "NAME,FSTYPE,SIZE,TYPE,MOUNTPOINT").Output()
 	if err != nil {
 		log.Fatalf("Bad run of lsblk: %v", err)
 	}
@@ -280,7 +280,7 @@ func (s *Server) prepDisks() {
 		// This is the WD passport drive
 		if len(fields) >= 3 && fields[len(fields)-1] == "part" && fields[len(fields)-2] == "238.5G" {
 			found = true
-			s.procDatastoreDisk(fields[0][strings.Index(fields[0], "sda"):], len(fields) != 4)
+			s.procDatastoreDisk(fields[0][strings.Index(fields[0], "sda"):], len(fields) != 4, len(fields) != 5)
 		}
 	}
 
