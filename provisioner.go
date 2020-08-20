@@ -254,6 +254,7 @@ const (
 )
 
 func (s *Server) procDisk(name string, needsFormat bool) {
+	time.Sleep(time.Second * 2)
 	s.Log(fmt.Sprintf("Working on %v, with view to formatting %v", name, needsFormat))
 }
 
