@@ -254,7 +254,7 @@ const (
 )
 
 func (s *Server) procDisk(name string, needsFormat bool) {
-	s.Log(fmt.Sprintf("Working on %v, with view to formatting %v", name[2:], needsFormat))
+	s.Log(fmt.Sprintf("Working on %v, with view to formatting %v", name, needsFormat))
 }
 
 func (s *Server) prepDisks() {
@@ -271,7 +271,7 @@ func (s *Server) prepDisks() {
 		// This is the WD passport drive
 		if len(fields) >= 3 && fields[len(fields)-1] == "part" && fields[len(fields)-2] == "238.5G" {
 			found = true
-			s.procDisk(fields[0], len(fields) != 4)
+			s.procDisk(fields[0][2:], len(fields) != 4)
 		}
 	}
 
