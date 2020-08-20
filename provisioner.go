@@ -271,7 +271,7 @@ func (s *Server) prepDisks() {
 		// This is the WD passport drive
 		if len(fields) >= 3 && fields[len(fields)-1] == "part" && fields[len(fields)-2] == "238.5G" {
 			found = true
-			s.procDisk(fields[0], len(fields) == 4)
+			s.procDisk(fields[0][2:], len(fields) != 4)
 		}
 	}
 
