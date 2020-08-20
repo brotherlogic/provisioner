@@ -253,6 +253,23 @@ const (
 	ID = "/github.com/brotherlogic/provisioner/id"
 )
 
+func (s *Server) prepDisks() {
+	b, err := exec.Command("lsblk").Output()
+	if err != nil {
+		log.Fatalf("Bad run of lsblk: %v", err)
+	}
+
+	lines := strings.Split(string(b), "\n")
+	for _, line := range lines {
+		fields := strings.Fields(line)
+
+		// This is the WD passport drive
+		if fields[3] == "part" && fields[2] == "238.5G" {
+			s.Log(fmt.Sprintf("Found WD Disk: %v", line))
+		}
+	}
+}
+
 func main() {
 	var quiet = flag.Bool("quiet", false, "Show all output")
 	flag.Parse()
@@ -287,6 +304,8 @@ func main() {
 		server.confirmVM()
 		time.Sleep(time.Second * 5)
 		server.installGo()
+		time.Sleep(time.Second * 5)
+		server.prepDisks()
 
 		server.Log(fmt.Sprintf("Completed provisioner run"))
 	}()
