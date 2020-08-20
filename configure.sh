@@ -22,4 +22,7 @@ chmod u-w /etc/sudoers.d/010_pi-nopasswd
 
 sudo systemctl restart cron
 
+su simon
+ssh-keygen -t rsa -f /home/simon/.ssh/id_rsa -q -P ""
+
 reboot
