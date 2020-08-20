@@ -276,6 +276,7 @@ func (s *Server) prepDisks() {
 		// This is the WD passport drive
 		if len(fields) >= 3 && fields[len(fields)-1] == "part" && fields[len(fields)-2] == "238.5G" {
 			found = true
+			s.Log(fmt.Sprintf("HERE %v -> %v", fields[0], strings.Index(fields[0], "/dev/")))
 			s.procDatastoreDisk(fields[0][strings.Index(fields[0], "/dev/"):], len(fields) != 4)
 		}
 	}
