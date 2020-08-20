@@ -269,11 +269,6 @@ func (s *Server) prepDisks() {
 			s.Log(fmt.Sprintf("Found WD Disk: %v", line))
 			found = true
 		}
-
-		if len(fields) >= 6 && fields[5] != "TYPE" {
-			s.Log(fmt.Sprintf("%v and %v", fields[3], fields[5]))
-		}
-
 	}
 
 	if !found {
