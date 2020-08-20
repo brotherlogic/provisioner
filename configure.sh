@@ -1,8 +1,6 @@
 apt update
 
-apt install emacs
-apt install golang
-apt install git
+apt install emacs golang git
 
 adduser simon
 
@@ -16,11 +14,12 @@ echo "0 * * * * source /home/simon/.profile; go get -u github.com/brotherlogic/g
 echo "*/5 * * * * source /home/simon/.profile; cd /home/simon/code/src/github.com/brotherlogic/gobuildslave; python BuildAndRun.py &>> out.txt" >> /var/spool/cron/crontabs/simon
 
 chown simon:crontab /var/spool/cron/crontabs/simon
+chmod 0600 /var/spool/cron/crontabs/simon
 
 chmod u+w /etc/sudoers.d/010_pi-nopasswd
 sed -i 's/pi/simon/g' /etc/sudoers.d/010_pi-nopasswd
 chmod u-w /etc/sudoers.d/010_pi-nopasswd
 
-sudo systemctl restart crond.service
+sudo systemctl restart cron
 
 reboot
