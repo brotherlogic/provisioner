@@ -303,7 +303,7 @@ func (s *Server) procDisk(name string, needsFormat bool, needsMount bool, disk s
 	if needsMount {
 		err := exec.Command("mkdir", fmt.Sprintf("/media/%v", disk)).Run()
 		if err != nil {
-			log.Fatalf("MKDIR %v", err)
+			log.Fatalf("MKDIR %v %v", fmt.Sprintf("/media/%v", disk), err)
 		}
 		err = exec.Command("chown", "simon:simon", fmt.Sprintf("/media/%v", disk)).Run()
 		if err != nil {
