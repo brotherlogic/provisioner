@@ -314,10 +314,11 @@ func (s *Server) procDisk(name string, needsFormat bool, needsMount bool, disk s
 		if err != nil {
 			log.Fatalf("OPEN FSTA %v", err)
 		}
-		defer f.Close()
-		if _, err := f.WriteString(fmt.Sprintf("/dev/%v   /media/%v  ext4  defaults,nofail,nodelalloc  1  2\n", disk, name)); err != nil {
+
+		if _, err := f.WriteString(fmt.Sprintf("/dev/%v   /media/%v  ext4  defaults,nofail,nodelalloc  1  2\n", name, disk)); err != nil {
 			log.Fatalf("WRITE FST %v", err)
 		}
+		f.Close()
 
 		out, err = exec.Command("mount", fmt.Sprintf("/media/%v", disk)).Output()
 		if err != nil {
