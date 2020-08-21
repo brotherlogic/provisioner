@@ -290,7 +290,7 @@ func (s *Server) procDatastoreDisk(name string, needsFormat bool, needsMount boo
 	}
 }
 
-func (s *Server) procScratchDisk(name string, needsFormat bool, needsMount bool) {
+func (s *Server) procDisk(name string, needsFormat bool, needsMount bool, disk string) {
 	s.Log(fmt.Sprintf("Working on for scratch %v, with view to formatting %v and mounting %v", name, needsFormat, needsMount))
 
 	if needsFormat {
@@ -301,11 +301,11 @@ func (s *Server) procScratchDisk(name string, needsFormat bool, needsMount bool)
 	}
 
 	if needsMount {
-		err := exec.Command("mkdir", "/media/scratch").Run()
+		err := exec.Command("mkdir", fmt.Sprintf("/media/%v", disk)).Run()
 		if err != nil {
 			log.Fatalf("%v", err)
 		}
-		err = exec.Command("chown", "simon:simon", "/media/scratch").Run()
+		err = exec.Command("chown", "simon:simon", fmt.Sprintf("/media/%v", disk)).Run()
 		if err != nil {
 			log.Fatalf("%v", err)
 		}
@@ -314,11 +314,11 @@ func (s *Server) procScratchDisk(name string, needsFormat bool, needsMount bool)
 			log.Fatalf("%v", err)
 		}
 		defer f.Close()
-		if _, err := f.WriteString(fmt.Sprintf("/dev/%v   /media/scratch  ext4  defaults,nofail,nodelalloc  1  2\n", name)); err != nil {
+		if _, err := f.WriteString(fmt.Sprintf("/dev/%v   /media/%v  ext4  defaults,nofail,nodelalloc  1  2\n", disk, name)); err != nil {
 			log.Fatalf("%v", err)
 		}
 
-		err = exec.Command("mount", "/media/scratch").Run()
+		err = exec.Command("mount", fmt.Sprintf("/media/%v", disk)).Run()
 		if err != nil {
 			log.Fatalf("%v", err)
 		}
@@ -339,15 +339,20 @@ func (s *Server) prepDisks() {
 		// This is the WD passport drive or the samsung key drive
 		if len(fields) >= 3 && fields[len(fields)-1] == "part" && (fields[len(fields)-2] == "238.5G" || fields[len(fields)-2] == "239G") {
 			found = true
-			s.procDatastoreDisk(fields[0][strings.Index(fields[0], "sd"):], len(fields) != 4, len(fields) != 5)
+			s.procDisk(fields[0][strings.Index(fields[0], "sd"):], len(fields) != 4, len(fields) != 5, "datastore")
 		}
 
 		// This is the smaller samsung key drive
 		if len(fields) >= 3 && fields[len(fields)-1] == "part" && (fields[len(fields)-2] == "29.9G") {
 			found = true
-			s.procScratchDisk(fields[0][strings.Index(fields[0], "sd"):], len(fields) != 4, len(fields) != 5)
+			s.procDisk(fields[0][strings.Index(fields[0], "sd"):], len(fields) != 4, len(fields) != 5, "scratch")
 		}
 
+		// This is the raid disk
+		if len(fields) >= 3 && fields[len(fields)-1] == "part" && (fields[len(fields)-2] == "7.3T") {
+			found = true
+			s.procDisk(fields[0][strings.Index(fields[0], "sd"):], len(fields) != 4, len(fields) != 5, "raid")
+		}
 	}
 
 	if !found {
