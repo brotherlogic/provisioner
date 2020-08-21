@@ -122,24 +122,24 @@ func (s *Server) validateEtcConfig() {
 	s.Log(fmt.Sprintf("Setting config"))
 	f, err := os.OpenFile("/etc/default/etcd", os.O_APPEND|os.O_WRONLY, 0644)
 	if err != nil {
-		log.Fatalf("%v", err)
+		log.Fatalf("OPEN CONF %v", err)
 	}
 	defer f.Close()
 	if _, err := f.WriteString("ETCD_UNSUPPORTED_ARCH=arm\n"); err != nil {
-		log.Fatalf("%v", err)
+		log.Fatalf("WRITE %v", err)
 	}
 
 	if _, err := f.WriteString(fmt.Sprintf("ETCD_ADVERTISE_CLIENT_URLS=\"http://%v:2379\"\n", s.Registry.GetIp())); err != nil {
-		log.Fatalf("%v", err)
+		log.Fatalf("ADD1 %v", err)
 	}
 	if _, err := f.WriteString(fmt.Sprintf("ETCD_INITIAL_ADVERTISE_PEER_URLS=\"http://%v:2380\"\n", s.Registry.GetIp())); err != nil {
-		log.Fatalf("%v", err)
+		log.Fatalf("ADD2 %v", err)
 	}
 	if _, err := f.WriteString(fmt.Sprintf("ETCD_LISTEN_CLIENT_URLS=\"http://%v:2379,http://localhost:2379\"\n", s.Registry.GetIp())); err != nil {
-		log.Fatalf("%v", err)
+		log.Fatalf("ADD3 %v", err)
 	}
 	if _, err := f.WriteString(fmt.Sprintf("ETCD_LISTEN_PEER_URLS=\"http://%v:2380\"\n", s.Registry.GetIp())); err != nil {
-		log.Fatalf("%v", err)
+		log.Fatalf("ADD4 %v", err)
 	}
 
 	s.Log(fmt.Sprintf("Config complete"))
@@ -162,11 +162,11 @@ func (s *Server) validateRPI() {
 
 	f, err := os.OpenFile("/var/spool/cron/crontabs/simon", os.O_APPEND|os.O_WRONLY, 0644)
 	if err != nil {
-		log.Fatalf("%v", err)
+		log.Fatalf("CRR %v", err)
 	}
 	defer f.Close()
 	if _, err := f.WriteString("@reboot sudo /home/simon/rpi_exporter\n"); err != nil {
-		log.Fatalf("%v", err)
+		log.Fatalf("WRCR %v", err)
 	}
 
 	// Restart to trigger crontab
@@ -268,24 +268,24 @@ func (s *Server) procDatastoreDisk(name string, needsFormat bool, needsMount boo
 	if needsMount {
 		err := exec.Command("mkdir", "/media/datastore").Run()
 		if err != nil {
-			log.Fatalf("%v", err)
+			log.Fatalf("MKDIR: %v", err)
 		}
 		err = exec.Command("chown", "simon:simon", "/media/datastore").Run()
 		if err != nil {
-			log.Fatalf("%v", err)
+			log.Fatalf("CHOWN %v", err)
 		}
 		f, err := os.OpenFile("/etc/fstab", os.O_APPEND|os.O_WRONLY, 0644)
 		if err != nil {
-			log.Fatalf("%v", err)
+			log.Fatalf("OPEN FSTAB %v", err)
 		}
 		defer f.Close()
 		if _, err := f.WriteString(fmt.Sprintf("/dev/%v   /media/datastore  ext4  defaults,nofail,nodelalloc  1  2\n", name)); err != nil {
-			log.Fatalf("%v", err)
+			log.Fatalf("WRITE FSTAB %v", err)
 		}
 
 		err = exec.Command("mount", "/media/datastore").Run()
 		if err != nil {
-			log.Fatalf("%v", err)
+			log.Fatalf("MOUNT %v", err)
 		}
 	}
 }
@@ -303,24 +303,24 @@ func (s *Server) procDisk(name string, needsFormat bool, needsMount bool, disk s
 	if needsMount {
 		err := exec.Command("mkdir", fmt.Sprintf("/media/%v", disk)).Run()
 		if err != nil {
-			log.Fatalf("%v", err)
+			log.Fatalf("MKDIR %v", err)
 		}
 		err = exec.Command("chown", "simon:simon", fmt.Sprintf("/media/%v", disk)).Run()
 		if err != nil {
-			log.Fatalf("%v", err)
+			log.Fatalf("CHOWN %v", err)
 		}
 		f, err := os.OpenFile("/etc/fstab", os.O_APPEND|os.O_WRONLY, 0644)
 		if err != nil {
-			log.Fatalf("%v", err)
+			log.Fatalf("OPEN FSTA %v", err)
 		}
 		defer f.Close()
 		if _, err := f.WriteString(fmt.Sprintf("/dev/%v   /media/%v  ext4  defaults,nofail,nodelalloc  1  2\n", disk, name)); err != nil {
-			log.Fatalf("%v", err)
+			log.Fatalf("WRITE FST %v", err)
 		}
 
 		err = exec.Command("mount", fmt.Sprintf("/media/%v", disk)).Run()
 		if err != nil {
-			log.Fatalf("%v", err)
+			log.Fatalf("MOUNT %v", err)
 		}
 	}
 }
