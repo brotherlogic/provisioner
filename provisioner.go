@@ -319,9 +319,10 @@ func (s *Server) procDisk(name string, needsFormat bool, needsMount bool, disk s
 			log.Fatalf("WRITE FST %v", err)
 		}
 
-		err = exec.Command("mount", fmt.Sprintf("/media/%v", disk)).Run()
+		out, err = exec.Command("mount", fmt.Sprintf("/media/%v", disk)).Output()
 		if err != nil {
-			log.Fatalf("MOUNT %v", err)
+			str := string(err.(*exec.ExitError).Stderr)
+			log.Fatalf("MOUNT %v -> %v, %v", err, out, str)
 		}
 	}
 }
