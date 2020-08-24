@@ -325,6 +325,12 @@ func (s *Server) procDisk(name string, needsFormat bool, needsMount bool, disk s
 			str := string(err.(*exec.ExitError).Stderr)
 			log.Fatalf("MOUNT %v -> %v, %v", err, out, str)
 		}
+
+		err = exec.Command("chown", "simon:simon", fmt.Sprintf("/media/%v", disk)).Run()
+		if err != nil {
+			log.Fatalf("CHOWN %v", err)
+		}
+
 	}
 }
 
