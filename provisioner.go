@@ -409,9 +409,8 @@ func main() {
 		cancel, err := server.Elect()
 		if err != nil {
 			server.RaiseIssue(fmt.Sprintf("%v cannot elect", server.Registry.GetIdentifier()), fmt.Sprintf("Reason: %v", err))
-		} else {
-			cancel()
 		}
+		cancel()
 		server.Log(fmt.Sprintf("Completed provisioner run"))
 	}()
 
