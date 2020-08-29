@@ -398,19 +398,19 @@ func (s *Server) prepPoe() {
 		log.Fatalf("WRITE %v", err)
 	}
 
-	if _, err := f.WriteString("dtparam=poe_fan_temp0=65000,poe_fan_temp0_hyst=5000\n"); err != nil {
+	if _, err := f.WriteString("dtparam=poe_fan_temp0=75000,poe_fan_temp0_hyst=5000\n"); err != nil {
 		log.Fatalf("WRITE %v", err)
 	}
 
-	if _, err := f.WriteString("dtparam=poe_fan_temp1=67000,poe_fan_temp1_hyst=2000\n"); err != nil {
+	if _, err := f.WriteString("dtparam=poe_fan_temp1=77000,poe_fan_temp1_hyst=2000\n"); err != nil {
 		log.Fatalf("WRITE %v", err)
 	}
 
-	if _, err := f.WriteString("dtparam=poe_fan_temp2=70000,poe_fan_temp0_hyst=2000\n"); err != nil {
+	if _, err := f.WriteString("dtparam=poe_fan_temp2=80000,poe_fan_temp0_hyst=2000\n"); err != nil {
 		log.Fatalf("WRITE %v", err)
 	}
 
-	if _, err := f.WriteString("dtparam=poe_fan_temp3=75000,poe_fan_temp1_hyst=2000\n"); err != nil {
+	if _, err := f.WriteString("dtparam=poe_fan_temp3=85000,poe_fan_temp1_hyst=2000\n"); err != nil {
 		log.Fatalf("WRITE %v", err)
 	}
 
