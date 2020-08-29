@@ -402,8 +402,10 @@ func (s *Server) prepPoe() {
 		log.Fatalf("WRITE %v", err)
 	}
 
-	cmd = exec.Command("reboot")
-	err = cmd.Run()
+	err = exec.Command("reboot").Run()
+	if err != nil {
+		log.Fatalf("REBOOT FAILED: %v", err)
+	}
 }
 
 func main() {
