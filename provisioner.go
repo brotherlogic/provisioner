@@ -381,11 +381,13 @@ func (s *Server) prepPoe() {
 	scanner.Split(bufio.ScanLines)
 
 	for scanner.Scan() {
-		if scanner.Text() == "ETCD_UNSUPPORTED_ARCH=arm" {
-			s.Log(fmt.Sprintf("dtparam=poe_fan_temp0=65000,poe_fan_temp0_hyst=5000"))
+		if scanner.Text() == "dtparam=poe_fan_temp0=65000,poe_fan_temp0_hyst=5000" {
+			s.Log(fmt.Sprintf("Found poe settings"))
 			return
 		}
 	}
+
+	s.Log(fmt.Sprintf("Setting poe settings"))
 
 	f, err := os.OpenFile("/boot/config.txt", os.O_APPEND|os.O_WRONLY, 0644)
 	if err != nil {
