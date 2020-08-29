@@ -399,6 +399,9 @@ func (s *Server) prepPoe() {
 	if _, err := f.WriteString("dtparam=poe_fan_temp1=67000,poe_fan_temp1_hyst=2000\n"); err != nil {
 		log.Fatalf("WRITE %v", err)
 	}
+
+	cmd = exec.Command("reboot")
+	err = cmd.Run()
 }
 
 func main() {
