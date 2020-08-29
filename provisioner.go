@@ -381,7 +381,7 @@ func (s *Server) prepPoe() {
 	scanner.Split(bufio.ScanLines)
 
 	for scanner.Scan() {
-		if scanner.Text() == "dtparam=poe_fan_temp0=65000,poe_fan_temp0_hyst=5000" {
+		if strings.HasPrefix(scanner.Text(), "dtparam=poe_fan_temp0") {
 			s.Log(fmt.Sprintf("Found poe settings"))
 			return
 		}
