@@ -369,6 +369,38 @@ func (s *Server) prepDisks() {
 	}
 }
 
+func (s *Server) prepPoe() {
+	file, err := os.Open("/boot/config.txt")
+	defer file.Close()
+
+	if err != nil {
+		log.Fatalf("failed opening file: %s", err)
+	}
+
+	scanner := bufio.NewScanner(file)
+	scanner.Split(bufio.ScanLines)
+
+	for scanner.Scan() {
+		if scanner.Text() == "ETCD_UNSUPPORTED_ARCH=arm" {
+			s.Log(fmt.Sprintf("dtparam=poe_fan_temp0=65000,poe_fan_temp0_hyst=5000"))
+			return
+		}
+	}
+
+	f, err := os.OpenFile("/boot/config.txt", os.O_APPEND|os.O_WRONLY, 0644)
+	if err != nil {
+		log.Fatalf("OPEN CONF %v", err)
+	}
+	defer f.Close()
+	if _, err := f.WriteString("dtparam=poe_fan_temp0=65000,poe_fan_temp0_hyst=5000\n"); err != nil {
+		log.Fatalf("WRITE %v", err)
+	}
+
+	if _, err := f.WriteString("dtparam=poe_fan_temp1=67000,poe_fan_temp1_hyst=2000\n"); err != nil {
+		log.Fatalf("WRITE %v", err)
+	}
+}
+
 func main() {
 	var quiet = flag.Bool("quiet", false, "Show all output")
 	flag.Parse()
@@ -411,6 +443,9 @@ func main() {
 			server.RaiseIssue(fmt.Sprintf("%v cannot elect", server.Registry.GetIdentifier()), fmt.Sprintf("Reason: %v", err))
 		}
 		cancel()
+		time.Sleep(time.Second * 5)
+		server.prepPoe()
+		time.Sleep(time.Second * 5)
 		server.Log(fmt.Sprintf("Completed provisioner run"))
 	}()
 
