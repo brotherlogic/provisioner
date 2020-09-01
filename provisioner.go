@@ -482,12 +482,6 @@ func main() {
 		time.Sleep(time.Second * 5)
 		server.prepDisks()
 		time.Sleep(time.Second * 5)
-		cancel, err := server.Elect()
-		if err != nil {
-			server.RaiseIssue(fmt.Sprintf("%v cannot elect", server.Registry.GetIdentifier()), fmt.Sprintf("Reason: %v", err))
-		}
-		cancel()
-		time.Sleep(time.Second * 5)
 		server.prepPoe()
 		time.Sleep(time.Second * 5)
 		server.prepSwap()
