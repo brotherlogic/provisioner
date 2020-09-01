@@ -433,6 +433,11 @@ func (s *Server) prepSwap() {
 		if len(fields) >= 2 {
 			if fields[0] == "swap" {
 				s.Log(fmt.Sprintf("Found Swap: %v", fields[1]))
+				if fields[1] != "0" {
+					exec.Command("dphys-swapfile", "swapoff").Run()
+					exec.Command("dphys-swapfile", "uninstall").Run()
+					exec.Command("systemctl", "disable", "dphys-swapfile").Run()
+				}
 			}
 		}
 	}
