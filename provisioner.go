@@ -434,7 +434,7 @@ func (s *Server) prepSwap() {
 			s.Log(fmt.Sprintf("FODUN %v", fields))
 		}
 		if len(fields) >= 2 {
-			if fields[0] == "swap" {
+			if fields[0] == "Swap:" {
 				s.Log(fmt.Sprintf("Found Swap: %v", fields[1]))
 				if fields[1] != "0" {
 					exec.Command("dphys-swapfile", "swapoff").Run()
@@ -445,7 +445,7 @@ func (s *Server) prepSwap() {
 		}
 	}
 
-	s.Log(fmt.Sprintf("No Swap adjustment needed"))
+	s.Log(fmt.Sprintf("No Swap adjustment needed from %v lines", len(lines)))
 }
 
 func main() {
