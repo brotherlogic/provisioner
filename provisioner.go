@@ -430,9 +430,6 @@ func (s *Server) prepSwap() {
 	lines := strings.Split(string(bytes), "\n")
 	for i, line := range lines {
 		fields := strings.Fields(line)
-		if i > 0 {
-			s.Log(fmt.Sprintf("FODUN %v", fields))
-		}
 		if len(fields) >= 2 {
 			if fields[0] == "Swap:" {
 				s.Log(fmt.Sprintf("Found Swap: %v", fields[1]))
