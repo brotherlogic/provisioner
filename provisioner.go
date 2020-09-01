@@ -445,7 +445,7 @@ func (s *Server) prepSwap() {
 		}
 	}
 
-	s.Log(fmt.Sprintf("No Swap adjustment needed"))
+	s.Log(fmt.Sprintf("No Swap adjustment needed from %v lines", len(lines)))
 }
 
 func main() {
