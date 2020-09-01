@@ -420,6 +420,23 @@ func (s *Server) prepPoe() {
 	}
 }
 
+func (s *Server) prepSwap() {
+	bytes, err := exec.Command("free", "-m").Output()
+
+	if err != nil {
+		log.Fatalf("failed opening file: %s", err)
+	}
+
+	lines := strings.Split(string(bytes), "\n")
+	for _, line := range lines {
+		fields := strings.Fields(line)
+		if fields[0] == "swap" {
+			s.Log(fmt.Sprintf("Found Swap: %v", fields[1]))
+		}
+	}
+
+}
+
 func main() {
 	var quiet = flag.Bool("quiet", false, "Show all output")
 	flag.Parse()
@@ -464,6 +481,8 @@ func main() {
 		cancel()
 		time.Sleep(time.Second * 5)
 		server.prepPoe()
+		time.Sleep(time.Second * 5)
+		server.prepSwap()
 		time.Sleep(time.Second * 5)
 		server.Log(fmt.Sprintf("Completed provisioner run"))
 	}()
