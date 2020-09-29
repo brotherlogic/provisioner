@@ -458,6 +458,7 @@ func main() {
 	server.PrepServer()
 	server.Register = server
 	server.DiskLog = true
+	server.RunSudo()
 
 	err := server.RegisterServerV2("provisioner", false, true)
 	if err != nil {
