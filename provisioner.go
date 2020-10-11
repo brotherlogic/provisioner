@@ -460,6 +460,7 @@ func (s *Server) setAutoload() {
 		return
 	}
 
+	os.MkdirAll("home/simon/.config/lxsession/LXDE-pi/", 0777)
 	f, err := os.OpenFile("/home/simon/.config/lxsession/LXDE-pi/autostart", os.O_APPEND|os.O_WRONLY|os.O_CREATE, 0644)
 	if err != nil {
 		log.Fatalf("OPEN CONF %v", err)
