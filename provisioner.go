@@ -445,6 +445,36 @@ func (s *Server) prepSwap() {
 	s.Log(fmt.Sprintf("No Swap adjustment needed from %v lines", len(lines)))
 }
 
+func (s *Server) gui() {
+	if s.Registry.GetIdentifier() != "personal" {
+		return
+	}
+
+	s.setAutologin()
+}
+
+func (s *Server) setAutologin() {
+	if fileExists("/etc/systemd/system/getty@tty1.service.d/autologin.conf") {
+		s.Log(fmt.Sprintf("Not setting auto-login"))
+		return
+	}
+	f, err := os.OpenFile("/etc/systemd/system/getty@tty1.service.d/autologin.conf", os.O_APPEND|os.O_WRONLY, 0644)
+	if err != nil {
+		log.Fatalf("OPEN CONF %v", err)
+	}
+
+	for _, string := range []string{"[Service]", "ExecStart=-/sbin/agetty --autologin smon --noclear %I $TERM"} {
+		if _, err := f.WriteString(string + "\n"); err != nil {
+			log.Fatalf("WRITE %v", err)
+		}
+	}
+
+	err = exec.Command("reboot").Run()
+	if err != nil {
+		log.Fatalf("REBOOT FAILED: %v", err)
+	}
+}
+
 func main() {
 	var quiet = flag.Bool("quiet", false, "Show all output")
 	flag.Parse()
@@ -486,6 +516,8 @@ func main() {
 		server.prepPoe()
 		time.Sleep(time.Second * 5)
 		server.prepSwap()
+		time.Sleep(time.Second * 5)
+		server.gui()
 		time.Sleep(time.Second * 5)
 		server.Log(fmt.Sprintf("Completed provisioner run"))
 	}()
