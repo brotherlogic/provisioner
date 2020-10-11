@@ -451,6 +451,30 @@ func (s *Server) gui() {
 	}
 
 	s.setAutologin()
+	s.setAutoload()
+}
+
+func (s *Server) setAutoload() {
+	if fileExists("/home/simon/.config/lxsession/LXDE-pi/autostart") {
+		s.Log(fmt.Sprintf("Not setting auto-login"))
+		return
+	}
+
+	f, err := os.OpenFile("/home/simon/.config/lxsession/LXDE-pi/autostart", os.O_APPEND|os.O_WRONLY|os.O_CREATE, 0644)
+	if err != nil {
+		log.Fatalf("OPEN CONF %v", err)
+	}
+
+	for _, string := range []string{"chromium-brower --kiosk www.brotherlogic.com/dashboard/"} {
+		if _, err := f.WriteString(string + "\n"); err != nil {
+			log.Fatalf("WRITE %v", err)
+		}
+	}
+
+	err = exec.Command("reboot").Run()
+	if err != nil {
+		log.Fatalf("REBOOT FAILED: %v", err)
+	}
 }
 
 func (s *Server) setAutologin() {
