@@ -459,12 +459,14 @@ func (s *Server) setAutologin() {
 		return
 	}
 
+	exec.Command("systemctl", "set-default", "graphical.target").Run()
+
 	f, err := os.OpenFile("/etc/systemd/system/getty@tty1.service.d/autologin.conf", os.O_APPEND|os.O_WRONLY|os.O_CREATE, 0644)
 	if err != nil {
 		log.Fatalf("OPEN CONF %v", err)
 	}
 
-	for _, string := range []string{"[Service]", "ExecStart=-/sbin/agetty --autologin smon --noclear %I $TERM"} {
+	for _, string := range []string{"[Service]", "ExecStart=", "ExecStart=-/sbin/agetty --autologin simon --noclear %I $TERM"} {
 		if _, err := f.WriteString(string + "\n"); err != nil {
 			log.Fatalf("WRITE %v", err)
 		}
