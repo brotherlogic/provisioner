@@ -469,10 +469,8 @@ func (s *Server) setAutoload() {
 		log.Fatalf("OPEN CONF %v", err)
 	}
 
-	err = exec.Command("apt", "install", "-y", "chromium").Run()
-	if err != nil {
-		log.Fatalf("BAD INSTALL: %v", err)
-	}
+	exec.Command("apt", "install", "-y", "chromium").Run()
+
 	for _, string := range []string{"@chromium-brower --kiosk www.brotherlogic.com/dashboard/"} {
 		if _, err := f.WriteString(string + "\n"); err != nil {
 			log.Fatalf("WRITE %v", err)
