@@ -458,7 +458,8 @@ func (s *Server) setAutologin() {
 		s.Log(fmt.Sprintf("Not setting auto-login"))
 		return
 	}
-	f, err := os.OpenFile("/etc/systemd/system/getty@tty1.service.d/autologin.conf", os.O_APPEND|os.O_WRONLY, 0644)
+
+	f, err := os.OpenFile("/etc/systemd/system/getty@tty1.service.d/autologin.conf", os.O_APPEND|os.O_WRONLY|os.O_CREATE, 0644)
 	if err != nil {
 		log.Fatalf("OPEN CONF %v", err)
 	}
