@@ -469,7 +469,7 @@ func (s *Server) setAutoload() {
 		log.Fatalf("OPEN CONF %v", err)
 	}
 
-	exec.Command("apt", "install", "-y", "chromium").Run()
+	exec.Command("apt", "install", "-y", "chromium", "chromium-browser").Run()
 
 	for _, string := range []string{"@chromium-brower --kiosk www.brotherlogic.com/dashboard/"} {
 		if _, err := f.WriteString(string + "\n"); err != nil {
