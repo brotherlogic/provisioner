@@ -229,7 +229,7 @@ func (s *Server) installGo() {
 	}
 
 	elems := strings.Fields(string(b))
-	if elems[2] != "go1.13.14" {
+	if elems[2] != "go1.16.13" {
 		s.Log(fmt.Sprintf("Installing new go version: '%v'", string(b)))
 		err := exec.Command("curl", "https://raw.githubusercontent.com/brotherlogic/provisioner/master/goscript.sh", "-o", "/home/simon/goscript.sh").Run()
 		if err != nil {
@@ -506,6 +506,10 @@ func (s *Server) setAutologin() {
 	if err != nil {
 		log.Fatalf("REBOOT FAILED: %v", err)
 	}
+}
+
+func (s *Server) prepForEtcd() {
+
 }
 
 func main() {
