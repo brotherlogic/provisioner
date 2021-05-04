@@ -246,7 +246,7 @@ func (s *Server) installGo() {
 			log.Fatalf("Bad install: %v", err)
 		}
 	} else {
-		s.Log(fmt.Sprintf("Not installing go"))
+		s.Log(fmt.Sprintf("Not installing go (%v)", elems[2]))
 	}
 }
 
