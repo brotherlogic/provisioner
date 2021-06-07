@@ -354,6 +354,7 @@ func (s *Server) prepDisks() {
 		// This is the smaller samsung key drive
 		if len(fields) >= 3 && fields[len(fields)-1] == "part" && (fields[len(fields)-2] == "29.9G") {
 			found = true
+			s.Log(fmt.Sprintf("thing: %v with %v", fields[1], fields))
 			if fields[1] == "vfat" {
 				s.RaiseIssue("Disk needs formatting", fmt.Sprintf("Disk %v on %v needs to be fdisk'd", fields[0], s.Registry.Identifier))
 			}
