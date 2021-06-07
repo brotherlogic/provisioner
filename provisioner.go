@@ -79,7 +79,7 @@ func (s *Server) validateEtc() {
 	r := &epb.ExecuteResponse{}
 	for r.GetStatus() != epb.CommandStatus_COMPLETE {
 
-		ctx, cancel := utils.ManualContext("provision-etc", "provision-etc", time.Minute, true)
+		ctx, cancel := utils.ManualContext("provision-etc", time.Minute)
 		defer cancel()
 
 		conn, err := s.FDialSpecificServer(ctx, "executor", s.Registry.Identifier)
