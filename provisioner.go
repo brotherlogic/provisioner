@@ -303,22 +303,22 @@ func (s *Server) procDisk(name string, needsFormat bool, needsMount bool, disk s
 	if needsMount {
 		out, err := exec.Command("mkdir", "-v", fmt.Sprintf("/media/%v", disk)).Output()
 		if err != nil {
-			str := string(err.(*exec.ExitError).Stderr)
-			log.Fatalf("MKDIR %v %v -> %v, %v", fmt.Sprintf("/media/%v", disk), err, out, str)
-		}
-		err = exec.Command("chown", "simon:simon", fmt.Sprintf("/media/%v", disk)).Run()
-		if err != nil {
-			log.Fatalf("CHOWN %v", err)
-		}
-		f, err := os.OpenFile("/etc/fstab", os.O_APPEND|os.O_WRONLY, 0644)
-		if err != nil {
-			log.Fatalf("OPEN FSTA %v", err)
-		}
+			return
+		} else {
+			err = exec.Command("chown", "simon:simon", fmt.Sprintf("/media/%v", disk)).Run()
+			if err != nil {
+				log.Fatalf("CHOWN %v", err)
+			}
+			f, err := os.OpenFile("/etc/fstab", os.O_APPEND|os.O_WRONLY, 0644)
+			if err != nil {
+				log.Fatalf("OPEN FSTA %v", err)
+			}
 
-		if _, err := f.WriteString(fmt.Sprintf("/dev/%v   /media/%v  ext4  defaults,nofail,nodelalloc  1  2\n", name, disk)); err != nil {
-			log.Fatalf("WRITE FST %v", err)
+			if _, err := f.WriteString(fmt.Sprintf("/dev/%v   /media/%v  ext4  defaults,nofail,nodelalloc  1  2\n", name, disk)); err != nil {
+				log.Fatalf("WRITE FST %v", err)
+			}
+			f.Close()
 		}
-		f.Close()
 
 		out, err = exec.Command("mount", fmt.Sprintf("/media/%v", disk)).Output()
 		if err != nil {
