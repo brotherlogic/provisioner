@@ -356,7 +356,7 @@ func (s *Server) prepDisks() {
 			found = true
 			s.Log(fmt.Sprintf("thing: %v with %v", fields[1], fields))
 			if fields[1] == "vfat" {
-				s.RaiseIssue("Disk needs formatting", fmt.Sprintf("Disk %v on %v needs to be fdisk'd", fields[0], s.Registry.Identifier))
+				s.RaiseIssue("One disk needs formatting", fmt.Sprintf("Disk %v on %v needs to be fdisk'd", fields[0], s.Registry.Identifier))
 			}
 			s.procDisk(fields[0][strings.Index(fields[0], "sd"):], len(fields) != 4, len(fields) != 5, "scratch")
 		}
