@@ -315,7 +315,7 @@ func (s *Server) procDisk(name string, needsFormat bool, needsMount bool, disk s
 			}
 
 			if _, err := f.WriteString(fmt.Sprintf("/dev/%v   /media/%v  ext4  defaults,nofail,nodelalloc  1  2\n", name, disk)); err != nil {
-				log.Fatalf("WRITE FST %v", err)
+				log.Fatalf("WRITE FSTAB ERR %v", err)
 			}
 			f.Close()
 		}
