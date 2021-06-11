@@ -517,6 +517,15 @@ func (s *Server) prepForEtcd() {
 
 }
 
+func (s *Server) prepForZsh() {
+	bytes, err := exec.Command("echo", "$SHELL").Output()
+	if err != nil {
+		log.Fatalf("Unable to echo shell: %v", err)
+	}
+
+	s.Log(fmt.Sprintf("Current shell is: %v", string(bytes)))
+}
+
 func main() {
 	var quiet = flag.Bool("quiet", false, "Show all output")
 	flag.Parse()
@@ -561,6 +570,8 @@ func main() {
 		time.Sleep(time.Second * 5)
 		server.gui()
 		time.Sleep(time.Second * 5)
+		server.prepForZsh()
+		time.Sleep(time.Second *5)
 		server.Log(fmt.Sprintf("Completed provisioner run"))
 	}()
 
