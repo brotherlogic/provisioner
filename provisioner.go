@@ -518,7 +518,13 @@ func (s *Server) prepForEtcd() {
 }
 
 func (s *Server) prepForZsh() {
-	bytes, err := exec.Command("echo", "$SHELL").Output()
+
+	err := exec.Command("apt", "install", "-y", "finger").Run()
+	if err != nil {
+		log.Fatalf("Unable to install finger: %v", err)
+	}
+
+	bytes, err := exec.Command("finger", "simon").Output()
 	if err != nil {
 		log.Fatalf("Unable to echo shell: %v", err)
 	}
@@ -569,7 +575,7 @@ func main() {
 		server.prepSwap()
 		time.Sleep(time.Second * 5)
 		server.gui()
-		time.Sleep(time.Second * 5)
+	cmd := exec.Command("apt", "install", "-y", "prometheus-node-exporter")	time.Sleep(time.Second * 5)
 		server.prepForZsh()
 		time.Sleep(time.Second *5)
 		server.Log(fmt.Sprintf("Completed provisioner run"))
