@@ -521,7 +521,7 @@ func (s *Server) prepForZsh() {
 
 	err := exec.Command("apt", "install", "-y", "finger").Run()
 	if err != nil {
-		log.Fatalf("Unable to install finger via apt: %v", err)
+		log.Fatalf("Unable to install shell finger via apt: %v", err)
 	}
 
 	bytes, err := exec.Command("finger", "simon").Output()
