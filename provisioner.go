@@ -540,6 +540,12 @@ func (s *Server) prepForZsh() {
 		if err != nil {
 			log.Fatalf("Unable to install shell finger via apt: %v", err)
 		}
+
+		// Trigger a reboot
+		err = exec.Command("reboot").Run()
+		if err != nil {
+			log.Fatalf("REBOOT FAILED: %v", err)
+		}
 	}
 }
 
