@@ -538,7 +538,7 @@ func (s *Server) prepForZsh() {
 		}
 		err = exec.Command("chsh", "-s", "/bin/zsh", "simon").Run()
 		if err != nil {
-			log.Fatalf("Unable to install shell finger via apt: %v", err)
+			log.Fatalf("Unable to change shell: %v", err)
 		}
 
 		// Trigger a reboot
