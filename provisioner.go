@@ -575,9 +575,9 @@ func main() {
 		server.prepSwap()
 		time.Sleep(time.Second * 5)
 		server.gui()
-	cmd := exec.Command("apt", "install", "-y", "prometheus-node-exporter")	time.Sleep(time.Second * 5)
+		time.Sleep(time.Second * 5)
 		server.prepForZsh()
-		time.Sleep(time.Second *5)
+		time.Sleep(time.Second * 5)
 		server.Log(fmt.Sprintf("Completed provisioner run"))
 	}()
 
