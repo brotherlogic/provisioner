@@ -536,7 +536,7 @@ func (s *Server) prepForZsh() {
 		if err != nil {
 			log.Fatalf("Unable to install shell finger via apt: %v", err)
 		}
-		err = exec.Command("chsh", "-s", "/bin/zsh").Run()
+		err = exec.Command("chsh", "-s", "/bin/zsh", "simon").Run()
 		if err != nil {
 			log.Fatalf("Unable to install shell finger via apt: %v", err)
 		}
