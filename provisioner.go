@@ -544,7 +544,7 @@ func (s *Server) prepForZsh() {
 		// Trigger a reboot
 		err = exec.Command("reboot").Run()
 		if err != nil {
-			log.Fatalf("REBOOT FAILED: %v", err)
+			log.Fatalf("Reboot did not pass:  %v", err)
 		}
 	}
 }
