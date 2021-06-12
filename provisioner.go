@@ -529,7 +529,9 @@ func (s *Server) prepForZsh() {
 		log.Fatalf("Unable to echo shell: %v", err)
 	}
 
-	s.Log(fmt.Sprintf("Current shell is: %v", string(bytes)))
+	if strings.Contains(string(bytes), "bash") {
+		s.Log(fmt.Sprintf("Currently set for bash, moving to zsh"))
+	}
 }
 
 func main() {
