@@ -571,7 +571,7 @@ func main() {
 
 	go func() {
 		time.Sleep(time.Second * 5)
-		server.validateEtc()
+		//server.validateEtc()
 		time.Sleep(time.Second * 5)
 		//server.validateEtcConfig()
 		time.Sleep(time.Second * 5)
@@ -579,7 +579,7 @@ func main() {
 		time.Sleep(time.Second * 5)
 		server.validateNodeExporter()
 		time.Sleep(time.Second * 5)
-		server.validateEtcRunsOnStartup()
+		//server.validateEtcRunsOnStartup()
 		time.Sleep(time.Second * 5)
 		server.confirmVM()
 		time.Sleep(time.Second * 5)
