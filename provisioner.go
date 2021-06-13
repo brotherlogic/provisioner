@@ -158,7 +158,7 @@ func (s *Server) validateRPI() {
 
 	cmd = exec.Command("mv", "/root/go/bin/rpi_exporter", "/home/simon/rpi_exporter")
 	err = cmd.Run()
-	s.Log(fmt.Sprintf("Ran copy: %v", err))
+	s.Log(fmt.Sprintf("Ran rpi copy copy: %v", err))
 
 	f, err := os.OpenFile("/var/spool/cron/crontabs/simon", os.O_APPEND|os.O_WRONLY, 0644)
 	if err != nil {
