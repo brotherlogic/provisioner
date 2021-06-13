@@ -571,15 +571,9 @@ func main() {
 
 	go func() {
 		time.Sleep(time.Second * 5)
-		//server.validateEtc()
-		time.Sleep(time.Second * 5)
-		//server.validateEtcConfig()
-		time.Sleep(time.Second * 5)
 		server.validateRPI()
 		time.Sleep(time.Second * 5)
 		server.validateNodeExporter()
-		time.Sleep(time.Second * 5)
-		//server.validateEtcRunsOnStartup()
 		time.Sleep(time.Second * 5)
 		server.confirmVM()
 		time.Sleep(time.Second * 5)
