@@ -519,14 +519,14 @@ func (s *Server) prepForEtcd() {
 
 func (s *Server) prepForZsh() {
 
-	err := exec.Command("apt", "install", "-y", "finger").Run()
+	bytes, err := exec.Command("apt", "install", "-y", "finger").Output()
 	if err != nil {
-		log.Fatalf("Unable to install shell finger via apt: %v", err)
+		log.Fatalf("Unable to install shell finger via apt: %v (%v)", err, string(bytes))
 	}
 
-	bytes, err := exec.Command("finger", "simon").Output()
+	bytes, err = exec.Command("finger", "simon").Output()
 	if err != nil {
-		log.Fatalf("Unable to echo shell: %v", err)
+		log.Fatalf("Unable to echo shell: %v (%v)", err, string(bytes))
 	}
 
 	if strings.Contains(string(bytes), "bash") {
