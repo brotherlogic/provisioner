@@ -530,7 +530,7 @@ func (s *Server) prepForZsh() {
 	}
 
 	if strings.Contains(string(bytes), "bash") {
-		s.Log(fmt.Sprintf("Currently set for bash, moving to zsh"))
+		s.Log("Currently set for bash, moving to zsh")
 
 		err = exec.Command("apt", "install", "-y", "zsh").Run()
 		if err != nil {
