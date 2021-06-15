@@ -33,8 +33,8 @@ systemctl start gobuildslave
 su simon <<EOSU
 ssh-keygen -t rsa -f /home/simon/.ssh/id_rsa -q -P ""
 go get github.com/brotherlogic/gobuildslave
-mkdir -p gobuild/bin
-cp code/bin/gobuildslave gobuild/bin
+mkdir -p /home/simon/gobuild/bin
+cp /home/simon/go/bin/gobuildslave /home/simon/gobuild/bin
 
-reboot
+sudo reboot
 EOSU
