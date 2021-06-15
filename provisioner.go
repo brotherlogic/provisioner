@@ -96,11 +96,11 @@ func (s *Server) configurePrometheus() {
 		log.Fatalf("OPEN jobs.json %v", err)
 	}
 	if _, err := f.WriteString("\n"); err != nil {
-		log.Fatalf("Failed to output blanks: %v", err)
+		log.Fatalf("Failed to output blanks to jobs file: %v", err)
 	}
 	out, err = exec.Command("chown", "simon:simon", "/etc/prometheus/jobs.json").Output()
 	if err != nil {
-		log.Fatalf("Unable to chown %v -> %v", err, string(out))
+		log.Fatalf("Unable to chown jobs files%v -> %v", err, string(out))
 	}
 
 }
