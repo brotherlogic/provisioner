@@ -74,7 +74,10 @@ func (s *Server) installPrometheus() {
 		return
 	}
 
-	s.Log(fmt.Sprintf("Installing Prometheus"))
+	out, err := exec.Command("apt", "install", "-y", "prometheus").Output()
+	if err != nil {
+		log.Fatalf("Unable to install prometheus %v -> %v", err, string(out))
+	}
 }
 
 func (s *Server) validateEtc() {
