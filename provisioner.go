@@ -113,7 +113,7 @@ func (s *Server) fixTimezone() {
 		log.Fatalf("Unable to call timeactl %v -> %v", err, string(out))
 	}
 
-	if !strings.Contains(string(out), "Pacific") {
+	if !strings.Contains(string(out), "Los_Angeles") {
 		s.Log(fmt.Sprintf("Setting timezone -> %v", string(out)))
 		out, err = exec.Command("timedatectl", "set-timezone", "America/Los_Angeles").Output()
 		if err != nil {
