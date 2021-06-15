@@ -90,6 +90,19 @@ func (s *Server) configurePrometheus() {
 	if err != nil {
 		log.Fatalf("Unable to configure prometheus %v -> %v", err, string(out))
 	}
+
+	f, err := os.OpenFile("/etc/prometheus/jobs.json", os.O_APPEND|os.O_WRONLY|os.O_CREATE, 0644)
+	if err != nil {
+		log.Fatalf("OPEN jobs.json %v", err)
+	}
+	if _, err := f.WriteString("\n"); err != nil {
+		log.Fatalf("Failed to output blanks: %v", err)
+	}
+	out, err = exec.Command("chown", "simon:simon", "/etc/prometheus/jobs.json").Output()
+	if err != nil {
+		log.Fatalf("Unable to chown %v -> %v", err, string(out))
+	}
+
 }
 
 func (s *Server) fixTimezone() {
@@ -109,7 +122,7 @@ func (s *Server) fixTimezone() {
 
 func (s *Server) installGrafana() {
 	if fileExists("/etc/init.d/grafana-server") {
-		s.Log("Not installing prometheus")
+		s.Log("Not installing grafana")
 		return
 	}
 
@@ -140,6 +153,15 @@ func (s *Server) installGrafana() {
 	if err != nil {
 		log.Fatalf("Unable to install grafana server %v -> %v", err, string(out))
 	}
+	out, err = exec.Command("systemctl", "enable", "grafana-server").Output()
+	if err != nil {
+		log.Fatalf("Unable to enable grafana server %v -> %v", err, string(out))
+	}
+	out, err = exec.Command("systemctl", "start", "grafana-server").Output()
+	if err != nil {
+		log.Fatalf("Unable to start grafana server %v -> %v", err, string(out))
+	}
+
 }
 
 func (s *Server) validateEtc() {
