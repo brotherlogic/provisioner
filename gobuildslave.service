@@ -1,0 +1,26 @@
+[Install]
+WantedBy=multi-user.target
+
+[Unit]
+# Since we're going to bind to a port on localhost, we need to wait for the
+# network service to boot:
+After=network.service
+Description=Go build slave
+
+# Configure your long-running process:
+# You'll want to adjust:
+# * WorkingDirectory: change this to the directory your application is in
+# * Environment: add or remove these options depending on your environment variable needs
+# * ExecStart: this is the command that'll be run to start your application
+[Service]
+User=simon
+WorkingDirectory=/home/simon/gobuild/bin/
+Environment=NODE_ENV="production"
+Environment=PORT=3000
+Environment=GOPATH=/home/simon/code
+Environment=PATH=/bin:/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+Environment=GOROOT=/usr/lib/go
+Environment=ETCDCTL_API=3
+ExecStart=/home/simon/gobuild/bin/gobuildslave
+Restart=always
+RestartSec=5%
