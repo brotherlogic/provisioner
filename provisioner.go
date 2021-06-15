@@ -103,6 +103,8 @@ func (s *Server) configurePrometheus() {
 		log.Fatalf("Unable to chown jobs files%v -> %v", err, string(out))
 	}
 
+	s.Log("Configured Prometheus")
+
 }
 
 func (s *Server) fixTimezone() {
