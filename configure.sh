@@ -26,14 +26,15 @@ curl https://raw.githubusercontent.com/brotherlogic/provisioner/master/goscript.
 chmod u+x /home/simon/goscript.sh
 /home/simon/goscript.sh
 
-sudo curl https://raw.githubusercontent.com/brotherlogic/provisioner/master/gobuildslave.service > /etc/systemd/system/
-sudo sysctl enable gobuildslave
-sudo sysctl start gobuildslave 
+curl https://raw.githubusercontent.com/brotherlogic/provisioner/master/gobuildslave.service > /etc/systemd/system/gobuildslave.service
+systemctl enable gobuildslave
+systemctl start gobuildslave 
 
-su simon
+su simon <<EOSU
 ssh-keygen -t rsa -f /home/simon/.ssh/id_rsa -q -P ""
 go get github.com/brotherlogic/gobuildslave
 mkdir -p gobuild/bin
 cp code/bin/gobuildslave gobuild/bin
 
 reboot
+EOSU
