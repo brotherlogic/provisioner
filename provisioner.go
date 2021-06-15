@@ -157,7 +157,7 @@ func (s *Server) installGrafana() {
 	}
 	out, err = exec.Command("systemctl", "enable", "grafana-server").Output()
 	if err != nil {
-		log.Fatalf("Unable to enable grafana server %v -> %v", err, string(out))
+		log.Fatalf("Unable to enable the grafana server %v -> %v", err, string(out))
 	}
 	out, err = exec.Command("systemctl", "start", "grafana-server").Output()
 	if err != nil {
