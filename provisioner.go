@@ -68,6 +68,15 @@ func fileExists(filename string) bool {
 	return !info.IsDir()
 }
 
+func (s *Server) installPrometheus() {
+	if fileExists("/etc/init.d/prometheus") {
+		s.Log("Not installing prometheus")
+		return
+	}
+
+	s.Log(fmt.Sprintf("Installing Prometheus"))
+}
+
 func (s *Server) validateEtc() {
 	if fileExists("/etc/init.d/etcd") {
 		s.Log("Not installing etcd")
@@ -589,6 +598,10 @@ func main() {
 		time.Sleep(time.Second * 5)
 		server.prepForZsh()
 		time.Sleep(time.Second * 5)
+		if server.Registry.Identifier == "monitoring" {
+			server.installPrometheus()
+			time.Sleep(time.Second * 5)
+		}
 		server.Log(fmt.Sprintf("Completed provisioner run"))
 	}()
 
