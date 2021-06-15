@@ -601,11 +601,14 @@ func main() {
 		time.Sleep(time.Second * 5)
 		server.prepForZsh()
 		time.Sleep(time.Second * 5)
-		if server.Registry.Identifier == "monitoring" {
+		if server.Registry.GetIdentifier() == "monitoring" {
 			server.installPrometheus()
 			time.Sleep(time.Second * 5)
+		} else {
+			server.Log(fmt.Sprintf("Skipping prometheus (%v)", server.Registry.GetIdentifier()))
+			time.Sleep(time.Second * 5)
 		}
-		server.Log(fmt.Sprintf("Completed provisioner run"))
+		server.Log("Completed provisioner run")
 	}()
 
 	fmt.Printf("%v", server.Serve())
