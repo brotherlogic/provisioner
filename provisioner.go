@@ -113,14 +113,22 @@ func (s *Server) installGrafana() {
 		return
 	}
 
-	out, err := exec.Command("wget", "-q", "-O", "-", "https://packages.grafana.com/gpg.key", "|", "apt-key", "add", "-").Output()
+	out, err := exec.Command("curl", "https://packages.grafana.com/gpg.key", "-o", "/home/simon/gpg.key").Output()
 	if err != nil {
 		log.Fatalf("Unable to install grafana key %v -> %v", err, string(out))
 	}
 
-	out, err = exec.Command("echo", "deb https://packages.grafana.com/oss/deb stable main", "|", "tee", "-a", "/etc/apt/sources.list.d/grafana.list").Output()
+	out, err = exec.Command("apt-key", "add", "/home/simon/gpg.key").Output()
 	if err != nil {
 		log.Fatalf("Unable to install grafana (2) %v -> %v", err, string(out))
+	}
+
+	f, err := os.OpenFile("/etc/apt/sources.list.d/grafana.list", os.O_APPEND|os.O_WRONLY|os.O_CREATE, 0644)
+	if err != nil {
+		log.Fatalf("OPEN CONF %v", err)
+	}
+	if _, err := f.WriteString("deb https://packages.grafana.com/oss/deb stable main\n"); err != nil {
+		log.Fatalf("Failed to output: %v", err)
 	}
 
 	out, err = exec.Command("apt", "update").Output()
