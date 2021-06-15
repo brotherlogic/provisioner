@@ -93,7 +93,7 @@ func (s *Server) configurePrometheus() {
 }
 
 func (s *Server) fixTimezone() {
-	out, err := exec.Command("timedatectl", "|", "grep", "zone").Output()
+	out, err := exec.Command("timedatectl").Output()
 	if err != nil {
 		log.Fatalf("Unable to call timeactl %v -> %v", err, string(out))
 	}
