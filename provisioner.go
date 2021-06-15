@@ -124,7 +124,7 @@ func (s *Server) fixTimezone() {
 
 func (s *Server) installGrafana() {
 	if fileExists("/etc/init.d/grafana-server") {
-		s.Log("Not installing grafana")
+		s.Log("Not installing grafana server")
 		return
 	}
 
