@@ -22,11 +22,18 @@ chmod u-w /etc/sudoers.d/010_pi-nopasswd
 
 sudo systemctl restart cron
 
+curl https://raw.githubusercontent.com/brotherlogic/provisioner/master/goscript.sh > /home/simon/goscript.sh
+chmod u+x /home/simon/goscript.sh
+/home/simon/goscript.sh
+
 sudo curl https://raw.githubusercontent.com/brotherlogic/provisioner/master/gobuildslave.service > /etc/systemd/system/
 sudo sysctl enable gobuildslave
 sudo sysctl start gobuildslave 
 
 su simon
 ssh-keygen -t rsa -f /home/simon/.ssh/id_rsa -q -P ""
+go get github.com/brotherlogic/gobuildslave
+mkdir -p gobuild/bin
+cp code/bin/gobuildslave gobuild/bin
 
 reboot
