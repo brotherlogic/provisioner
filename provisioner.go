@@ -92,6 +92,21 @@ func (s *Server) configurePrometheus() {
 	}
 }
 
+func (s *Server) fixTimezone() {
+	out, err := exec.Command("timedatectl", "|", "grep", "zone").Output()
+	if err != nil {
+		log.Fatalf("Unable to call timeactl %v -> %v", err, string(out))
+	}
+
+	if !strings.Contains(string(out), "Pacific") {
+		s.Log(fmt.Sprintf("Setting timezone -> %v", string(out)))
+		out, err = exec.Command("timedatectl", "set-timezone", "America/Los_Angeles").Output()
+		if err != nil {
+			log.Fatalf("Unable to set timezone %v -> %v", err, string(out))
+		}
+	}
+}
+
 func (s *Server) installGrafana() {
 	if fileExists("/etc/init.d/grafana-server") {
 		s.Log("Not installing prometheus")
@@ -651,6 +666,8 @@ func main() {
 			server.Log(fmt.Sprintf("Skipping prometheus (%v)", server.Registry.GetIdentifier()))
 			time.Sleep(time.Second * 5)
 		}
+		server.fixTimezone()
+		time.Sleep(time.Second * 5)
 		server.Log("Completed provisioner run")
 	}()
 
