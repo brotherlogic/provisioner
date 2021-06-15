@@ -4,7 +4,7 @@ go 1.13
 
 require (
 	github.com/brotherlogic/buildserver v0.0.0-20210615000043-ee418c412d1f // indirect
-	github.com/brotherlogic/discovery v0.0.0-20210615034324-53209faeba7e // indirect
+	github.com/brotherlogic/discovery v0.0.0-20210615192121-10f3be3b7087 // indirect
 	github.com/brotherlogic/executor v0.0.0-20200915161204-3a99e1a889c5
 	github.com/brotherlogic/goserver v0.0.0-20210615034723-54a9e8564a59
 	github.com/golang/protobuf v1.5.2

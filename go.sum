@@ -74,6 +74,8 @@ github.com/brotherlogic/discovery v0.0.0-20210603130245-be477d62024e/go.mod h1:W
 github.com/brotherlogic/discovery v0.0.0-20210609231824-1f75ecb34f74/go.mod h1:1UGoeSAuZ3dnsptFTnLlznrwWzJ4ZdddBkNr7PTNUPI=
 github.com/brotherlogic/discovery v0.0.0-20210615034324-53209faeba7e h1:o4UJw+axcvurlnxJpdBH++wUJ91Qnfy4xtgzlrWtkGM=
 github.com/brotherlogic/discovery v0.0.0-20210615034324-53209faeba7e/go.mod h1:UkYgA8UaGMixH8x+vg+69pPXogS2h2cE72bKVaXjj4Q=
+github.com/brotherlogic/discovery v0.0.0-20210615192121-10f3be3b7087 h1:R7HfZ77JOhpaluOJHJW0SESFYObLqUutLVVkGj+Dv5s=
+github.com/brotherlogic/discovery v0.0.0-20210615192121-10f3be3b7087/go.mod h1:y6utcxP1RFoYb4gqkMt1ATFVRgsc6sO5cPjsUmVWUGs=
 github.com/brotherlogic/executor v0.0.0-20200915161204-3a99e1a889c5 h1:C7fz0kG2z73M954DgmguUvUNtopGD9m6HipxOsg7MVw=
 github.com/brotherlogic/executor v0.0.0-20200915161204-3a99e1a889c5/go.mod h1:i/BkUS1evIqvvP1PQeiBpnOnju5VtzM8inv9hK2dWBo=
 github.com/brotherlogic/filecopier v0.0.0-20201006222739-09abeee3f6b2/go.mod h1:saBy/E0zc3DFPBq8dcJuUbbm/YKK3eUafRXyL16eQtg=
