@@ -80,6 +80,45 @@ func (s *Server) installPrometheus() {
 	}
 }
 
+func (s *Server) configurePrometheus() {
+	if fileExists("/etc/prometheus/jobs.json") {
+		s.Log("Not configuring prometheus")
+		return
+	}
+
+	out, err := exec.Command("curl", "https://raw.githubusercontent.com/brotherlogic/provisioner/master/prometheus.yml", "-o", "/etc/prometheus/prometheus.yml").Output()
+	if err != nil {
+		log.Fatalf("Unable to configure prometheus %v -> %v", err, string(out))
+	}
+}
+
+func (s *Server) installGrafana() {
+	if fileExists("/etc/init.d/grafana-server") {
+		s.Log("Not installing prometheus")
+		return
+	}
+
+	out, err := exec.Command("wget", "-q", "-O", "-", "https://packages.grafana.com/gpg.key", "|", "apt-key", "add", "-").Output()
+	if err != nil {
+		log.Fatalf("Unable to install grafana key %v -> %v", err, string(out))
+	}
+
+	out, err = exec.Command("echo", "deb https://packages.grafana.com/oss/deb stable main", "|", "tee", "-a", "/etc/apt/sources.list.d/grafana.list").Output()
+	if err != nil {
+		log.Fatalf("Unable to install grafana (2) %v -> %v", err, string(out))
+	}
+
+	out, err = exec.Command("apt", "update").Output()
+	if err != nil {
+		log.Fatalf("Unable to update apt %v -> %v", err, string(out))
+	}
+
+	out, err = exec.Command("apt", "install", "-y", "grafana").Output()
+	if err != nil {
+		log.Fatalf("Unable to install grafana server %v -> %v", err, string(out))
+	}
+}
+
 func (s *Server) validateEtc() {
 	if fileExists("/etc/init.d/etcd") {
 		s.Log("Not installing etcd")
@@ -603,6 +642,10 @@ func main() {
 		time.Sleep(time.Second * 5)
 		if server.Registry.GetIdentifier() == "monitoring" {
 			server.installPrometheus()
+			time.Sleep(time.Second * 5)
+			server.configurePrometheus()
+			time.Sleep(time.Second * 5)
+			server.installGrafana()
 			time.Sleep(time.Second * 5)
 		} else {
 			server.Log(fmt.Sprintf("Skipping prometheus (%v)", server.Registry.GetIdentifier()))
