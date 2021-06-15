@@ -22,6 +22,10 @@ chmod u-w /etc/sudoers.d/010_pi-nopasswd
 
 sudo systemctl restart cron
 
+sudo curl https://raw.githubusercontent.com/brotherlogic/provisioner/master/gobuildslave.service > /etc/systemd/system/
+sudo sysctl enable gobuildslave
+sudo sysctl start gobuildslave 
+
 su simon
 ssh-keygen -t rsa -f /home/simon/.ssh/id_rsa -q -P ""
 
