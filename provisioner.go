@@ -475,6 +475,14 @@ func (s *Server) prepDisks() {
 					log.Fatalf("Cannot install cdparanoia: %v -> %v", err, string(b))
 				}
 			}
+
+			if !fileExists("/usr/bin/eject") {
+				s.Log("Found cd drive and installing eject")
+				b, err := exec.Command("apt", "install", "-y", "eject").Output()
+				if err != nil {
+					log.Fatalf("Cannot install eject: %v -> %v", err, string(b))
+				}
+			}
 		}
 	}
 
