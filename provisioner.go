@@ -465,6 +465,17 @@ func (s *Server) prepDisks() {
 			found = true
 			s.procDisk(fields[0][strings.Index(fields[0], "sd"):], len(fields) != 4, len(fields) != 5, "raid")
 		}
+
+		// This is a cdrom
+		if len(fields) >= 3 && fields[len(fields)-1] == "rom" {
+			if !fileExists("/usr/bin/cdparanoia") {
+				s.Log("Found cdrom and installing cdparanoia")
+				b, err := exec.Command("apt", "install", "-y", "cdparanoia").Output()
+				if err != nil {
+					log.Fatalf("Cannot install cdparanoia: %v -> %v", err, string(b))
+				}
+			}
+		}
 	}
 
 	if !found {
