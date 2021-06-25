@@ -80,6 +80,18 @@ func (s *Server) installPrometheus() {
 	}
 }
 
+func (s *Server) installFlac() {
+	if fileExists("/usr/bin/flac") {
+		s.Log("Not installing flac")
+		return
+	}
+
+	out, err := exec.Command("apt", "install", "-y", "flac").Output()
+	if err != nil {
+		log.Fatalf("Unable to install flac %v -> %v", err, string(out))
+	}
+}
+
 func (s *Server) configurePrometheus() {
 	if fileExists("/etc/prometheus/jobs.json") {
 		s.Log("Not configuring prometheus")
@@ -706,6 +718,10 @@ func main() {
 		time.Sleep(time.Second * 5)
 		server.prepForZsh()
 		time.Sleep(time.Second * 5)
+		if server.Registry.GetIdentifier() == "cd" {
+			server.installFlac()
+			time.Sleep(time.Second * 5)
+		}
 		if server.Registry.GetIdentifier() == "monitoring" {
 			server.installPrometheus()
 			time.Sleep(time.Second * 5)
