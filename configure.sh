@@ -1,8 +1,8 @@
+adduser simon
+
 apt update
 
 apt install emacs golang git
-
-adduser simon
 
 echo "export GOPATH=/home/simon/code" >> /home/simon/.profile
 echo "export PATH=$GOPATH/bin:$GOROOT/bin:$PATH" >> /home/simon/.profile
