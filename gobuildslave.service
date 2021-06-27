@@ -23,4 +23,4 @@ Environment=GOROOT=/usr/lib/go
 Environment=ETCDCTL_API=3
 ExecStart=/home/simon/gobuild/bin/gobuildslave.sh
 Restart=always
-RestartSec=5%
+RestartSec=5
