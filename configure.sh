@@ -36,6 +36,7 @@ ssh-keygen -t rsa -f /home/simon/.ssh/id_rsa -q -P ""
 go install github.com/brotherlogic/gobuildslave@latest
 mkdir -p /home/simon/gobuild/bin
 cp /home/simon/go/bin/gobuildslave /home/simon/gobuild/bin
+curl https://raw.githubusercontent.com/brotherlogic/provisioner/master/gobuildslave.sh -o /home/simon/gobuild/bin/gobuildslave.sh
 
 sudo reboot
 EOSU
