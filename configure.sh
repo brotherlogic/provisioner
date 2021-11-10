@@ -4,7 +4,7 @@ apt update
 
 apt install -y emacs golang git
 
-echo "export GOPATH=/home/simon/code" >> /home/simon/.profile
+echo "export GOPATH=/home/simon/go" >> /home/simon/.profile
 echo "export PATH=$GOPATH/bin:$GOROOT/bin:$PATH" >> /home/simon/.profile
 echo "export GOROOT=/usr/lib/go" >> /home/simon/.profile
 echo "export ETCDCTL_API=3" >> /home/simon/.profile
