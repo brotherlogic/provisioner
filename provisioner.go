@@ -604,6 +604,7 @@ func (s *Server) setAutoload() {
 	}
 
 	exec.Command("apt", "install", "-y", "chromium", "chromium-browser").Run()
+	exec.Command("apt", "install", "-y", "unclutter").Run()
 
 	for _, string := range []string{"@lxpanel --profile LXDE-pi",
 		"@pcmanfm --desktop --profile LXDE-pi",
@@ -617,6 +618,8 @@ func (s *Server) setAutoload() {
 			log.Fatalf("WRITE %v", err)
 		}
 	}
+
+	exec.Command("chown", "simon:simon", "/home/simon/.config/lxsession/LXDE-pi/autostart")
 
 	err = exec.Command("reboot").Run()
 	if err != nil {
