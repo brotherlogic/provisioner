@@ -580,7 +580,7 @@ func (s *Server) prepSwap() {
 }
 
 func (s *Server) gui() {
-	if s.Registry.GetIdentifier() != "personal" {
+	if s.Registry.GetIdentifier() != "rdisplay" {
 		return
 	}
 
@@ -605,7 +605,7 @@ func (s *Server) setAutoload() {
 
 	exec.Command("apt", "install", "-y", "chromium", "chromium-browser").Run()
 
-	for _, string := range []string{"@chromium-brower --kiosk www.brotherlogic.com/dashboard/"} {
+	for _, string := range []string{"@chromium-brower --kiosk www.google.com"} {
 		if _, err := f.WriteString(string + "\n"); err != nil {
 			log.Fatalf("WRITE %v", err)
 		}
