@@ -615,7 +615,7 @@ func (s *Server) setAutoload() {
 		"@xset s noblank",
 		"@xset s off",
 		"@xset -dpms",
-		"@chromium-browser --start-fullscreen --start-maximized http://www.google.com"} {
+		"@chromium-browser --kiosk http://www.google.com"} {
 		if _, err := f.WriteString(string + "\n"); err != nil {
 			log.Fatalf("WRITE %v", err)
 		}
