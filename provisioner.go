@@ -606,6 +606,7 @@ func (s *Server) setAutoload() {
 	exec.Command("apt", "install", "-y", "chromium-browser").Run()
 	exec.Command("apt", "install", "-y", "unclutter").Run()
 	exec.Command("apt", "install", "-y", "point-rpi").Run()
+	exec.Command("apt", "remove", "lxplug-volumepulse").Run()
 	exec.Command("rm", "/etc/xdg/autostart/piwiz.desktop").Run()
 
 	for _, string := range []string{"@lxpanel --profile LXDE-pi",
@@ -620,7 +621,7 @@ func (s *Server) setAutoload() {
 		}
 	}
 
-	exec.Command("chown", "simon:simon", "/home/simon/.config/lxsession/LXDE-pi/autostart")
+	exec.Command("chown", "-R", "simon:simon", "/home/simon/.config").Run()
 
 	err = exec.Command("reboot").Run()
 	if err != nil {
