@@ -605,6 +605,7 @@ func (s *Server) setAutoload() {
 
 	exec.Command("apt", "install", "-y", "chromium-browser").Run()
 	exec.Command("apt", "install", "-y", "unclutter").Run()
+	exec.Command("apt", "install", "-y", "point-rpi").Run()
 	exec.Command("rm", "/etc/xdg/autostart/piwiz.desktop").Run()
 
 	for _, string := range []string{"@lxpanel --profile LXDE-pi",
