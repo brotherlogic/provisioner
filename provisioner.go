@@ -610,12 +610,11 @@ func (s *Server) setAutoload() {
 
 	for _, string := range []string{"@lxpanel --profile LXDE-pi",
 		"@pcmanfm --desktop --profile LXDE-pi",
-		"@xscreensaver -no-splash",
 		"point-rpi",
 		"@xset s noblank",
 		"@xset s off",
 		"@xset -dpms",
-		"@chromium-browser --kiosk http://www.google.com"} {
+		"@chromium-browser  --noerrdialogs --disable-infobars --kiosk http://www.google.com"} {
 		if _, err := f.WriteString(string + "\n"); err != nil {
 			log.Fatalf("WRITE %v", err)
 		}
