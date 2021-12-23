@@ -603,7 +603,7 @@ func (s *Server) setAutoload() {
 		log.Fatalf("OPEN CONF %v", err)
 	}
 
-	exec.Command("apt", "install", "-y", "chromium", "chromium-browser").Run()
+	exec.Command("apt", "install", "-y", "chromium-browser").Run()
 	exec.Command("apt", "install", "-y", "unclutter").Run()
 	exec.Command("rm", "/etc/xdg/autostart/piwiz.desktop").Run()
 
