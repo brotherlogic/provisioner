@@ -615,7 +615,7 @@ func (s *Server) setAutoload() {
 		"@xset s noblank",
 		"@xset s off",
 		"@xset -dpms",
-		"@chromium-browser  --noerrdialogs --disable-infobars --kiosk file:///home/simon/index.html"} {
+		"@chromium-browser  --noerrdialogs --enable-features=OverlayScrollbar --disable-infobars --kiosk file:///home/simon/index.html"} {
 		if _, err := f.WriteString(string + "\n"); err != nil {
 			log.Fatalf("WRITE %v", err)
 		}
