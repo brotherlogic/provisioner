@@ -92,6 +92,18 @@ func (s *Server) installFlac() {
 	}
 }
 
+func (s *Server) installLsof() {
+	if fileExists("/usr/bin/lsof") {
+		s.Log("Not installing lsof")
+		return
+	}
+
+	out, err := exec.Command("apt", "install", "-y", "lsof").Output()
+	if err != nil {
+		log.Fatalf("Unable to install lsof %v -> %v", err, string(out))
+	}
+}
+
 func (s *Server) configurePrometheus() {
 	if fileExists("/etc/prometheus/jobs.json") {
 		s.Log("Not configuring prometheus")
@@ -719,6 +731,8 @@ func main() {
 		server.confirmVM()
 		time.Sleep(time.Second * 5)
 		server.installGo()
+		time.Sleep(time.Second * 5)
+		server.installLsof()
 		time.Sleep(time.Second * 5)
 		server.prepDisks()
 		time.Sleep(time.Second * 5)
