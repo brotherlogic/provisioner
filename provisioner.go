@@ -316,6 +316,11 @@ func (s *Server) confirmVM() {
 }
 
 func (s *Server) validateNodeExporter() {
+	// Don' install rpi-export for rdisplay
+	if s.Registry.Identifier == "rdisplay" {
+		return
+	}
+
 	if fileExists("/usr/bin/prometheus-node-exporter") {
 		s.Log(fmt.Sprintf("Not installing node exporter"))
 		return
