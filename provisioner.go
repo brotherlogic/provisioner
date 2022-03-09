@@ -382,41 +382,6 @@ const (
 	ID = "/github.com/brotherlogic/provisioner/id"
 )
 
-func (s *Server) procDatastoreDisk(name string, needsFormat bool, needsMount bool) {
-	s.Log(fmt.Sprintf("Working on %v, with view to formatting %v and mounting %v", name, needsFormat, needsMount))
-
-	if needsFormat {
-		b, err := exec.Command("mkfs.ext4", fmt.Sprintf("/dev/%v", name)).Output()
-		if err != nil {
-			log.Fatalf("Bad format: %v -> %v", err, string(b))
-		}
-	}
-
-	if needsMount {
-		err := exec.Command("mkdir", "/media/datastore").Run()
-		if err != nil {
-			log.Fatalf("MKDIR: %v", err)
-		}
-		err = exec.Command("chown", "simon:simon", "/media/datastore").Run()
-		if err != nil {
-			log.Fatalf("CHOWN %v", err)
-		}
-		f, err := os.OpenFile("/etc/fstab", os.O_APPEND|os.O_WRONLY, 0644)
-		if err != nil {
-			log.Fatalf("OPEN FSTAB %v", err)
-		}
-		defer f.Close()
-		if _, err := f.WriteString(fmt.Sprintf("/dev/%v   /media/datastore  ext4  defaults,nofail,nodelalloc  1  2\n", name)); err != nil {
-			log.Fatalf("WRITE FSTAB %v", err)
-		}
-
-		err = exec.Command("mount", "/media/datastore").Run()
-		if err != nil {
-			log.Fatalf("MOUNT %v", err)
-		}
-	}
-}
-
 func (s *Server) procDisk(name string, needsFormat bool, needsMount bool, disk string) {
 	s.Log(fmt.Sprintf("Working on for scratch %v, with view to formatting %v and mounting %v", name, needsFormat, needsMount))
 
@@ -473,7 +438,8 @@ func (s *Server) prepDisks() {
 		fields := strings.Fields(line)
 
 		// This is the WD passport drive or the samsung key drive
-		if len(fields) >= 3 && fields[len(fields)-1] == "part" && (fields[len(fields)-2] == "238.5G" || fields[len(fields)-2] == "239G") {
+		if len(fields) >= 3 && fields[len(fields)-1] == "part" &&
+			(fields[len(fields)-2] == "238.5G" || fields[len(fields)-2] == "239G" || fields[len(fields)-2] == "119.5G" || fields[len(fields)-2] == "120G") {
 			found = true
 			s.procDisk(fields[0][strings.Index(fields[0], "sd"):], len(fields) != 4, len(fields) != 5, "datastore")
 		}
