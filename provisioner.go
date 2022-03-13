@@ -383,7 +383,7 @@ const (
 )
 
 func (s *Server) procDisk(name string, needsFormat bool, needsMount bool, disk string) {
-	s.Log(fmt.Sprintf("Working on for scratch %v, with view to formatting %v and mounting %v", name, needsFormat, needsMount))
+	s.Log(fmt.Sprintf("Working on for %v %v, with view to formatting %v and mounting %v", disk, name, needsFormat, needsMount))
 
 	if needsFormat {
 		b, err := exec.Command("mkfs.ext4", fmt.Sprintf("/dev/%v", name)).Output()
