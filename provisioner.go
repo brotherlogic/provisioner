@@ -627,6 +627,10 @@ func (s *Server) setAutoload() {
 		log.Fatalf("OPEN CONF %v", err)
 	}
 
+	exec.Command("apt", "install", "-y", "xserver-xorg").Run()
+	exec.Command("apt", "install", "-y", "raspberrypi-ui-mods").Run()
+	exec.Command("apt", "install", "-y", "lightdm").Run()
+
 	exec.Command("apt", "install", "-y", "chromium-browser").Run()
 	exec.Command("apt", "install", "-y", "unclutter").Run()
 	exec.Command("apt", "install", "-y", "point-rpi").Run()
