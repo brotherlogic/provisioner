@@ -396,7 +396,7 @@ func (s *Server) procDisk(name string, needsFormat bool, needsMount bool, disk s
 			elems := strings.Fields(line)
 			count, err := strconv.Atoi(elems[1])
 			if err != nil {
-				log.Fatalf("Can't parse int: %v ->%v", elems[1], err)
+				log.Fatalf("Can't parse int: %v ->%v", elems, err)
 			}
 			s.procDiskInternal(name, needsFormat, needsMount, count != 5, disk)
 		}
