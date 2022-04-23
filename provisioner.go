@@ -463,13 +463,20 @@ func (s *Server) prepDisks() {
 		log.Fatalf("Bad run of lsblk: %v", err)
 	}
 
-	//Ensure the root partition gets prepped
-	s.procDiskInternal("mmcblk0p2", false, false, true, "root")
-
 	found := false
 	lines := strings.Split(string(b), "\n")
 	for _, line := range lines {
 		fields := strings.Fields(line)
+
+		if fields[len(fields)-1] == "/" {
+			//Ensure the root partition gets prepped
+			if strings.Contains(fields[0], "sd") {
+				s.procDiskInternal(fields[0][strings.Index(fields[0], "sd"):], false, false, true, "root")
+			} else {
+				s.procDiskInternal(fields[0][strings.Index(fields[0], "mm"):], false, false, true, "root")
+			}
+
+		}
 
 		// This is the WD passport drive or the samsung key drive
 		if len(fields) >= 3 && fields[len(fields)-1] == "part" &&
