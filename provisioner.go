@@ -457,7 +457,7 @@ func (s *Server) prepDisks() {
 	}
 
 	//Ensure the root partition gets prepped
-	s.procDiskInternal("mmlk0p2", false, false, true, "root")
+	s.procDiskInternal("mmcblk0p2", false, false, true, "root")
 
 	found := false
 	lines := strings.Split(string(b), "\n")
