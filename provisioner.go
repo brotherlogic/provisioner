@@ -552,7 +552,7 @@ func (s *Server) prepPoe() {
 		log.Fatalf("OPEN CONF %v", err)
 	}
 	defer f.Close()
-	if _, err := f.WriteString("dtoverlay=rpi-poe,hyperpixel4\n"); err != nil {
+	if _, err := f.WriteString("dtoverlay=rpi-poe,vc4-kms-dpi-hyperpixel4\n"); err != nil {
 		log.Fatalf("WRITE %v", err)
 	}
 
