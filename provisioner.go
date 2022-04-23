@@ -409,6 +409,13 @@ func (s *Server) procDisk(name string, needsFormat bool, needsMount bool, disk s
 func (s *Server) procDiskInternal(name string, needsFormat bool, needsMount bool, needTuneUpdate bool, disk string) {
 	s.Log(fmt.Sprintf("Working on for %v %v, with view to formatting %v and mounting %v and tune update %v", disk, name, needsFormat, needsMount, needTuneUpdate))
 
+	if needTuneUpdate {
+		b, err := exec.Command("tune2fs", "-c", "5", fmt.Sprintf("/dev/%v", name)).Output()
+		if err != nil {
+			log.Fatalf("Bad run of tune2fs set: %v->%v", err, string(b))
+		}
+	}
+
 	if needsFormat {
 		b, err := exec.Command("mkfs.ext4", fmt.Sprintf("/dev/%v", name)).Output()
 		if err != nil {
