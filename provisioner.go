@@ -394,7 +394,7 @@ func (s *Server) procDisk(name string, needsFormat bool, needsMount bool, disk s
 		if strings.HasPrefix(line, "Maximum mount count") {
 			ran = true
 			elems := strings.Fields(line)
-			count, err := strconv.Atoi(elems[1])
+			count, err := strconv.Atoi(elems[3])
 			if err != nil {
 				log.Fatalf("Can't parse int: %v ->%v", elems, err)
 			}
