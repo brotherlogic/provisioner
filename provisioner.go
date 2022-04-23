@@ -468,7 +468,7 @@ func (s *Server) prepDisks() {
 	for _, line := range lines {
 		fields := strings.Fields(line)
 
-		if fields[len(fields)-1] == "/" {
+		if len(fields) >= 3 && fields[len(fields)-1] == "/" {
 			//Ensure the root partition gets prepped
 			if strings.Contains(fields[0], "sd") {
 				s.procDiskInternal(fields[0][strings.Index(fields[0], "sd"):], false, false, true, "root")
