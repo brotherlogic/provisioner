@@ -386,7 +386,7 @@ const (
 func (s *Server) procDisk(name string, needsFormat bool, needsMount bool, disk string) {
 	out, err := exec.Command("tune2fs", "-l", fmt.Sprintf("/dev/%v", name)).Output()
 	if err != nil {
-		log.Fatalf("Bad run of tune2fs: %v", err)
+		log.Fatalf("Bad run of tune2fs: %v -> %v", err, name)
 	}
 	lines := strings.Split(string(out), "\n")
 	ran := false
