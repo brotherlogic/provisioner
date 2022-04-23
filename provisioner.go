@@ -456,6 +456,9 @@ func (s *Server) prepDisks() {
 		log.Fatalf("Bad run of lsblk: %v", err)
 	}
 
+	//Ensure the root partition gets prepped
+	s.procDiskInternal("mmlk0p2", false, false, true, "root")
+
 	found := false
 	lines := strings.Split(string(b), "\n")
 	for _, line := range lines {
