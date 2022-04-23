@@ -8,6 +8,7 @@ import (
 	"log"
 	"os"
 	"os/exec"
+	"strconv"
 	"strings"
 	"time"
 
@@ -383,7 +384,30 @@ const (
 )
 
 func (s *Server) procDisk(name string, needsFormat bool, needsMount bool, disk string) {
-	s.Log(fmt.Sprintf("Working on for %v %v, with view to formatting %v and mounting %v", disk, name, needsFormat, needsMount))
+	out, err := exec.Command("tune2fs", "-l", fmt.Sprintf("/dev/%v", name)).Output()
+	if err != nil {
+		log.Fatalf("Bad run of tune2fs: %v", err)
+	}
+	lines := strings.Split(string(out), "\n")
+	ran := false
+	for _, line := range lines {
+		if strings.HasPrefix(line, "Maximum mount count") {
+			ran = true
+			elems := strings.Fields(line)
+			count, err := strconv.Atoi(elems[1])
+			if err != nil {
+				log.Fatalf("Can't parse int: %v ->%v", elems[1], err)
+			}
+			s.procDiskInternal(name, needsFormat, needsMount, count != 5, disk)
+		}
+	}
+	if !ran {
+		log.Fatalf("Unable to run: %v, %v -> %v", name, disk, string(out))
+	}
+}
+
+func (s *Server) procDiskInternal(name string, needsFormat bool, needsMount bool, needTuneUpdate bool, disk string) {
+	s.Log(fmt.Sprintf("Working on for %v %v, with view to formatting %v and mounting %v and tune update %v", disk, name, needsFormat, needsMount, needTuneUpdate))
 
 	if needsFormat {
 		b, err := exec.Command("mkfs.ext4", fmt.Sprintf("/dev/%v", name)).Output()
