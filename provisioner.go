@@ -552,7 +552,11 @@ func (s *Server) prepPoe() {
 		log.Fatalf("OPEN CONF %v", err)
 	}
 	defer f.Close()
-	if _, err := f.WriteString("dtoverlay=rpi-poe,vc4-kms-dpi-hyperpixel4sq\n"); err != nil {
+	if _, err := f.WriteString("dtoverlay=rpi-poe\n"); err != nil {
+		log.Fatalf("WRITE %v", err)
+	}
+
+	if _, err := f.WriteString("dtoverlay=vc4-kms-dpi-hyperpixel4sq\n"); err != nil {
 		log.Fatalf("WRITE %v", err)
 	}
 
@@ -627,14 +631,19 @@ func (s *Server) setAutoload() {
 		log.Fatalf("OPEN CONF %v", err)
 	}
 
-	exec.Command("apt", "install", "-y", "xserver-xorg").Run()
-	exec.Command("apt", "install", "-y", "raspberrypi-ui-mods").Run()
+	exec.Command("apt", "install", "-y", "xserver-xorg", "xinit").Run()
+	exec.Command("apt", "install", "-y", "lxde-core", "lxterminal", "lxappearance").Run()
 	exec.Command("apt", "install", "-y", "lightdm").Run()
 
 	exec.Command("apt", "install", "-y", "chromium-browser").Run()
 	exec.Command("apt", "install", "-y", "unclutter").Run()
 	exec.Command("apt", "install", "-y", "point-rpi").Run()
 	exec.Command("apt", "remove", "lxplug-volumepulse").Run()
+	exec.Command("apt", "remove", "cups").Run()
+	exec.Command("apt", "remove", "pulseaudio").Run()
+	exec.Command("apt", "remove", "system-config-printer").Run()
+	exec.Command("systemctl", "disable", "packagekit").Run()
+
 	exec.Command("rm", "/etc/xdg/autostart/piwiz.desktop").Run()
 
 	for _, string := range []string{"@lxpanel --profile LXDE-pi",
@@ -670,7 +679,7 @@ func (s *Server) setAutologin() {
 		log.Fatalf("OPEN CONF %v", err)
 	}
 
-	for _, string := range []string{"[Service]", "ExecStart=", "ExecStart=-/sbin/agetty --autologin simon --noclear %I $TERM"} {
+	for _, string := range []string{"[Service]", "ExecStart=-/sbin/agetty --autologin simon --noclear %I $TERM"} {
 		if _, err := f.WriteString(string + "\n"); err != nil {
 			log.Fatalf("WRITE %v", err)
 		}
