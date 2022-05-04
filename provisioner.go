@@ -291,6 +291,11 @@ func (s *Server) validateRPI() {
 	if _, err := f.WriteString("@reboot sudo /home/simon/rpi_exporter\n"); err != nil {
 		log.Fatalf("WRCR %v", err)
 	}
+	if s.Registry.Identifier == "rdisplay" {
+		if _, err := f.WriteString("0 * * * * sudo /etc/init.d.lightdm restart\n"); err != nil {
+			log.Fatalf("WRCR %v", err)
+		}
+	}
 
 	// Restart to trigger crontab
 	cmd = exec.Command("reboot")
