@@ -636,6 +636,7 @@ func (s *Server) setAutoload() {
 		log.Fatalf("OPEN CONF %v", err)
 	}
 
+	exec.Command("apt", "install", "-y", "rpd-plym-splash").Run()
 	exec.Command("apt", "install", "-y", "xserver-xorg", "xinit").Run()
 	exec.Command("apt", "install", "-y", "lxde-core", "lxterminal", "lxappearance").Run()
 	exec.Command("apt", "install", "-y", "lightdm").Run()
