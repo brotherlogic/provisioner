@@ -640,6 +640,8 @@ func (s *Server) setAutoload() {
 	exec.Command("apt", "install", "-y", "lxde-core", "lxterminal", "lxappearance").Run()
 	exec.Command("apt", "install", "-y", "lightdm").Run()
 
+	s.RaiseIssue("Setup boot", "Setup boot for user")
+
 	exec.Command("apt", "install", "-y", "chromium-browser").Run()
 	exec.Command("apt", "install", "-y", "unclutter").Run()
 	exec.Command("apt", "install", "-y", "point-rpi").Run()
