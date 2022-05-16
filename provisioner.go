@@ -613,7 +613,7 @@ func (s *Server) prepSwap() {
 }
 
 func (s *Server) gui() {
-	if s.Registry.GetIdentifier() != "rdisplay" {
+	if !strings.Contains(s.Registry.GetIdentifier(), "display") {
 		return
 	}
 
@@ -638,19 +638,21 @@ func (s *Server) setAutoload() {
 
 	exec.Command("apt", "install", "-y", "rpd-plym-splash").Run()
 	exec.Command("apt", "install", "-y", "xserver-xorg", "xinit").Run()
-	exec.Command("apt", "install", "-y", "lxde-core", "lxterminal", "lxappearance").Run()
+	exec.Command("apt", "install", "-y", "raspberrypi-ui-mods").Run()
 	exec.Command("apt", "install", "-y", "lightdm").Run()
 
 	s.RaiseIssue("Setup boot", "Setup boot for user")
 
-	exec.Command("apt", "install", "-y", "chromium-browser").Run()
+	exec.Command("apt", "install", "-y", "chromium-browser", "rpi-chromium-mods").Run()
 	exec.Command("apt", "install", "-y", "unclutter").Run()
 	exec.Command("apt", "install", "-y", "point-rpi").Run()
 	exec.Command("apt", "remove", "-y", "lxplug-volumepulse").Run()
-	exec.Command("apt", "remove", "-y", "cups").Run()
-	exec.Command("apt", "remove", "-y", "pulseaudio").Run()
-	exec.Command("apt", "remove", "-y", "packagekit").Run()
-	exec.Command("apt", "remove", "-y", "system-config-printer").Run()
+	exec.Command("apt", "purge", "-y", "cups").Run()
+	exec.Command("apt", "purge", "-y", "pulseaudio").Run()
+	exec.Command("apt", "purge", "-y", "packagekit").Run()
+	exec.Command("apt", "purge", "-y", "system-config-printer").Run()
+	exec.Command("apt", "purge", "-y", "light-locker").Run()
+	exec.Command("apt", "purge", "-y", "cups-browsed").Run()
 	exec.Command("apt", "autoremove", "-y").Run()
 	exec.Command("systemctl", "disable", "packagekit").Run()
 
