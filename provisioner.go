@@ -10,6 +10,7 @@ import (
 	"os/exec"
 	"strconv"
 	"strings"
+	"sync"
 	"time"
 
 	"github.com/brotherlogic/goserver"
@@ -759,6 +760,8 @@ func main() {
 		return
 	}
 
+	swg := &sync.WaitGroup{}
+	swg.Add(1)
 	go func() {
 		time.Sleep(time.Second * 5)
 		server.validateRPI()
@@ -797,9 +800,16 @@ func main() {
 			time.Sleep(time.Second * 5)
 		}
 		server.fixTimezone()
-		time.Sleep(time.Second * 5)
+		time.Sleep(time.Minute)
 		server.Log("Completed provisioner run")
+		swg.Done()
 	}()
+
+	if server.Registry.Identifier == "clust3" {
+		server.Log("Waiting for sync group")
+		swg.Wait()
+		server.Log("Wait complete")
+	}
 
 	fmt.Printf("%v", server.Serve())
 }
