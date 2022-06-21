@@ -800,7 +800,7 @@ func main() {
 			time.Sleep(time.Second * 5)
 		}
 		server.fixTimezone()
-		time.Sleep(time.Minute)
+		time.Sleep(time.Minute * 5)
 		server.Log("Completed provisioner run")
 		swg.Done()
 	}()
