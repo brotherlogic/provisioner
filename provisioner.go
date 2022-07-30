@@ -745,12 +745,12 @@ func main() {
 		log.SetOutput(ioutil.Discard)
 	}
 	server := Init()
-	server.PrepServer()
+	server.PrepServer("provisioner")
 	server.Register = server
 	server.DiskLog = true
 	server.RunSudo()
 
-	err := server.RegisterServerV2("provisioner", false, true)
+	err := server.RegisterServerV2(false)
 	if err != nil {
 		return
 	}
