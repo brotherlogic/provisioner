@@ -703,6 +703,31 @@ func (s *Server) prepForEtcd() {
 
 }
 
+func (s *Server) prepForDocker() {
+	if s.Registry.Identifier != "clust6" && s.Registry.Identifier != "clust3" && s.Registry.Identifier != "clust7" {
+		return
+	}
+
+	bytes, err := exec.Command("which", "docker").CombinedOutput()
+	if err != nil {
+		log.Fatalf("Unable to install docker: %v", err)
+	}
+
+	if !strings.Contains(string(bytes), "/usr/bin/docker") {
+		_, err := exec.Command("curl", "https://get.docker.com", "-o", "/home/simon/docker-install.sh").CombinedOutput()
+		if err != nil {
+			log.Fatalf("Unable to download docker install script")
+		}
+
+		_, err = exec.Command("sh", "/home/simon/docker-install.sh").CombinedOutput()
+		if err != nil {
+			log.Fatalf("Unable to install docker: %v", err)
+		}
+
+		s.Log(fmt.Sprintf("Docker installed"))
+	}
+}
+
 func (s *Server) prepForZsh() {
 
 	bytes, err := exec.Command("apt", "install", "-y", "finger").Output()
@@ -774,6 +799,8 @@ func main() {
 		server.prepPoe()
 		time.Sleep(time.Second * 5)
 		server.prepSwap()
+		time.Sleep(time.Second * 5)
+		server.prepForDocker()
 		time.Sleep(time.Second * 5)
 		server.gui()
 		time.Sleep(time.Second * 5)
