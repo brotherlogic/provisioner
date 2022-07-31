@@ -708,12 +708,9 @@ func (s *Server) prepForDocker() {
 		return
 	}
 
-	bytes, err := exec.Command("which", "docker").CombinedOutput()
+	// which exits with status code 1 if not found
+	_, err := exec.Command("which", "docker").CombinedOutput()
 	if err != nil {
-		log.Fatalf("Unable to install docker: %v", err)
-	}
-
-	if !strings.Contains(string(bytes), "/usr/bin/docker") {
 		_, err := exec.Command("curl", "https://get.docker.com", "-o", "/home/simon/docker-install.sh").CombinedOutput()
 		if err != nil {
 			log.Fatalf("Unable to download docker install script")
@@ -724,7 +721,7 @@ func (s *Server) prepForDocker() {
 			log.Fatalf("Unable to install docker: %v", err)
 		}
 
-		s.Log(fmt.Sprintf("Docker installed"))
+		s.Log("Docker installed")
 	}
 }
 
