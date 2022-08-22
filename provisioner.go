@@ -740,7 +740,7 @@ func (s *Server) prepForMongo(ctx context.Context) {
 	}
 
 	// Only install if mongo is not installed
-	out, err := exec.Command("mongo", "--version").CombinedOutput()
+	out, err := exec.Command("mongosh", "--version").CombinedOutput()
 	if err == nil {
 		return
 	}
