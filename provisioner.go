@@ -773,7 +773,7 @@ func (s *Server) prepForMongo(ctx context.Context) {
 		log.Fatalf("Unable to install mongo : %v (%v)", err, string(bytes))
 	}
 
-	bytes, err = exec.Command("sed", "-i", "s:?/var/lib/mongodb:media/mongo/:g", "/etc/mongod.conf").CombinedOutput()
+	bytes, err = exec.Command("sed", "-i", "s:/var/lib/mongodb:/media/mongo/:g", "/etc/mongod.conf").CombinedOutput()
 	if err != nil {
 		log.Fatalf("Unable to run sed: %v (%v)", err, string(bytes))
 	}
