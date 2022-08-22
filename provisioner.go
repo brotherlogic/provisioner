@@ -745,7 +745,7 @@ func (s *Server) prepForMongo(ctx context.Context) {
 		//return
 	}
 
-	out, err = exec.Command("wget", "https://www.mongodb.org/static/pgp/server-4.4.asc", "-O", "/home/simon/server-6.0.asc").Output()
+	out, err := exec.Command("wget", "https://www.mongodb.org/static/pgp/server-4.4.asc", "-O", "/home/simon/server-4.4.asc").Output()
 	if err != nil {
 		log.Fatalf("Unable to download mongo key %v -> %v", err, string(out))
 	}
