@@ -739,7 +739,13 @@ func (s *Server) prepForMongo(ctx context.Context) {
 		return
 	}
 
-	out, err := exec.Command("wget", "https://www.mongodb.org/static/pgp/server-6.0.asc", "-O", "/home/simon/server-6.0.asc").Output()
+	// Only install if mongo is not installed
+	out, err := exec.Command("mongo", "--version").CombinedOutput()
+	if err == nil {
+		return
+	}
+
+	out, err = exec.Command("wget", "https://www.mongodb.org/static/pgp/server-6.0.asc", "-O", "/home/simon/server-6.0.asc").Output()
 	if err != nil {
 		log.Fatalf("Unable to download mongo key %v -> %v", err, string(out))
 	}
@@ -755,6 +761,16 @@ func (s *Server) prepForMongo(ctx context.Context) {
 	}
 	if _, err := f.WriteString("deb [ arch=amd64,arm64 ] https://repo.mongodb.org/apt/ubuntu focal/mongodb-org/6.0 multiverse\n"); err != nil {
 		log.Fatalf("Failed to output: %v", err)
+	}
+
+	bytes, err := exec.Command("apt", "update").CombinedOutput()
+	if err != nil {
+		log.Fatalf("Unable to update apt: %v (%v)", err, string(bytes))
+	}
+
+	bytes, err = exec.Command("apt", "install", "mongodb-org", "-y").CombinedOutput()
+	if err != nil {
+		log.Fatalf("Unable to install mongo : %v (%v)", err, string(bytes))
 	}
 
 }
