@@ -70,9 +70,9 @@ func fileExists(filename string) bool {
 	return !info.IsDir()
 }
 
-func (s *Server) installPrometheus() {
+func (s *Server) installPrometheus(ctx context.Context) {
 	if fileExists("/etc/init.d/prometheus") {
-		s.Log("Not installing prometheus")
+		s.CtxLog(ctx, "Not installing prometheus")
 		return
 	}
 
@@ -82,9 +82,9 @@ func (s *Server) installPrometheus() {
 	}
 }
 
-func (s *Server) installFlac() {
+func (s *Server) installFlac(ctx context.Context) {
 	if fileExists("/usr/bin/flac") {
-		s.Log("Not installing flac")
+		s.CtxLog(ctx, "Not installing flac")
 		return
 	}
 
@@ -94,9 +94,9 @@ func (s *Server) installFlac() {
 	}
 }
 
-func (s *Server) installLsof() {
+func (s *Server) installLsof(ctx context.Context) {
 	if fileExists("/usr/bin/lsof") {
-		s.Log("Not installing lsof")
+		s.CtxLog(ctx, "Not installing lsof")
 		return
 	}
 
@@ -106,9 +106,9 @@ func (s *Server) installLsof() {
 	}
 }
 
-func (s *Server) configurePrometheus() {
+func (s *Server) configurePrometheus(ctx context.Context) {
 	if fileExists("/etc/prometheus/jobs.json") {
-		s.Log("Not configuring prometheus")
+		s.CtxLog(ctx, "Not configuring prometheus")
 		return
 	}
 
@@ -129,18 +129,18 @@ func (s *Server) configurePrometheus() {
 		log.Fatalf("Unable to chown jobs files%v -> %v", err, string(out))
 	}
 
-	s.Log("Configured Prometheus")
+	s.CtxLog(ctx, "Configured Prometheus")
 
 }
 
-func (s *Server) fixTimezone() {
+func (s *Server) fixTimezone(ctx context.Context) {
 	out, err := exec.Command("timedatectl").Output()
 	if err != nil {
 		log.Fatalf("Unable to call timeactl %v -> %v", err, string(out))
 	}
 
 	if !strings.Contains(string(out), "Los_Angeles") {
-		s.Log(fmt.Sprintf("Setting timezone -> %v", string(out)))
+		s.CtxLog(ctx, fmt.Sprintf("Setting timezone -> %v", string(out)))
 		out, err = exec.Command("timedatectl", "set-timezone", "America/Los_Angeles").Output()
 		if err != nil {
 			log.Fatalf("Unable to set timezone %v -> %v", err, string(out))
@@ -148,9 +148,9 @@ func (s *Server) fixTimezone() {
 	}
 }
 
-func (s *Server) installGrafana() {
+func (s *Server) installGrafana(ctx context.Context) {
 	if fileExists("/etc/init.d/grafana-server") {
-		s.Log("Not installing grafana server")
+		s.CtxLog(ctx, "Not installing grafana server")
 		return
 	}
 
@@ -192,13 +192,13 @@ func (s *Server) installGrafana() {
 
 }
 
-func (s *Server) validateEtc() {
+func (s *Server) validateEtc(ctx context.Context) {
 	if fileExists("/etc/init.d/etcd") {
-		s.Log("Not installing etcd")
+		s.CtxLog(ctx, "Not installing etcd")
 		return
 	}
 
-	s.Log("Installing etcd")
+	s.CtxLog(ctx, "Installing etcd")
 
 	r := &epb.ExecuteResponse{}
 	for r.GetStatus() != epb.CommandStatus_COMPLETE {
@@ -215,17 +215,17 @@ func (s *Server) validateEtc() {
 		client := epb.NewExecutorServiceClient(conn)
 		r, err := client.QueueExecute(ctx, &epb.ExecuteRequest{Command: &epb.Command{Binary: "sudo", Parameters: []string{"apt", "install", "-y", "etcd"}}})
 		if err != nil {
-			s.Log(fmt.Sprintf("Unable to run execute: %v", err))
+			s.CtxLog(ctx, fmt.Sprintf("Unable to run execute: %v", err))
 		}
 
 		time.Sleep(time.Second)
-		s.Log(fmt.Sprintf("Result %v", r))
+		s.CtxLog(ctx, fmt.Sprintf("Result %v", r))
 	}
 
-	s.Log("Installed etcd")
+	s.CtxLog(ctx, "Installed etcd")
 }
 
-func (s *Server) validateEtcConfig() {
+func (s *Server) validateEtcConfig(ctx context.Context) {
 	file, err := os.Open("/etc/default/etcd")
 	defer file.Close()
 
@@ -238,12 +238,12 @@ func (s *Server) validateEtcConfig() {
 
 	for scanner.Scan() {
 		if scanner.Text() == "ETCD_UNSUPPORTED_ARCH=arm" {
-			s.Log(fmt.Sprintf("Config exists"))
+			s.CtxLog(ctx, fmt.Sprintf("Config exists"))
 			return
 		}
 	}
 
-	s.Log(fmt.Sprintf("Setting config"))
+	s.CtxLog(ctx, fmt.Sprintf("Setting config"))
 	f, err := os.OpenFile("/etc/default/etcd", os.O_APPEND|os.O_WRONLY, 0644)
 	if err != nil {
 		log.Fatalf("OPEN CONF %v", err)
@@ -266,23 +266,23 @@ func (s *Server) validateEtcConfig() {
 		log.Fatalf("ADD4 %v", err)
 	}
 
-	s.Log(fmt.Sprintf("Config complete"))
+	s.CtxLog(ctx, fmt.Sprintf("Config complete"))
 }
 
-func (s *Server) validateRPI() {
+func (s *Server) validateRPI(ctx context.Context) {
 	if fileExists("/home/simon/rpi_exporter") {
-		s.Log(fmt.Sprintf("Not installing rpi exporter"))
+		s.CtxLog(ctx, fmt.Sprintf("Not installing rpi exporter"))
 		return
 	}
 
 	cmd := exec.Command("go", "get", "github.com/lukasmalkmus/rpi_exporter")
 	bytes, err := cmd.Output()
-	s.Log(fmt.Sprintf("Ran plain go get command: %v (%v)", err, string(bytes)))
+	s.CtxLog(ctx, fmt.Sprintf("Ran plain go get command: %v (%v)", err, string(bytes)))
 	time.Sleep(time.Second * 10)
 
 	cmd = exec.Command("mv", "/root/go/bin/rpi_exporter", "/home/simon/rpi_exporter")
 	err = cmd.Run()
-	s.Log(fmt.Sprintf("Ran rpi copy copy: %v", err))
+	s.CtxLog(ctx, fmt.Sprintf("Ran rpi copy copy: %v", err))
 
 	f, err := os.OpenFile("/var/spool/cron/crontabs/simon", os.O_APPEND|os.O_WRONLY, 0644)
 	if err != nil {
@@ -303,12 +303,12 @@ func (s *Server) validateRPI() {
 	err = cmd.Run()
 }
 
-func (s *Server) confirmVM() {
+func (s *Server) confirmVM(ctx context.Context) {
 	cmd := exec.Command("sysctl", "vm.dirty_ratio")
 	b, err := cmd.Output()
 
 	if err != nil {
-		s.Log(fmt.Sprintf("Error in vm confirm: %v", err))
+		s.CtxLog(ctx, fmt.Sprintf("Error in vm confirm: %v", err))
 		return
 	}
 
@@ -316,42 +316,42 @@ func (s *Server) confirmVM() {
 		return
 	}
 
-	s.Log(fmt.Sprintf("Setting the dirty ratio"))
+	s.CtxLog(ctx, fmt.Sprintf("Setting the dirty ratio"))
 	exec.Command("sysctl", "-w", "vm.dirty_ratio=10").Run()
 	exec.Command("sysctl", "-w", "vm.dirty_background_ratio=5").Run()
 	exec.Command("sysctl", "-p").Run()
 }
 
-func (s *Server) validateNodeExporter() {
+func (s *Server) validateNodeExporter(ctx context.Context) {
 	if fileExists("/usr/bin/prometheus-node-exporter") {
-		s.Log(fmt.Sprintf("Not installing node exporter"))
+		s.CtxLog(ctx, fmt.Sprintf("Not installing node exporter"))
 		return
 	}
 
 	time.Sleep(time.Second * 10)
 	cmd := exec.Command("apt", "install", "-y", "prometheus-node-exporter")
 	err := cmd.Run()
-	s.Log(fmt.Sprintf("Ran command: %v", err))
+	s.CtxLog(ctx, fmt.Sprintf("Ran command: %v", err))
 }
 
-func (s *Server) validateEtcRunsOnStartup() {
+func (s *Server) validateEtcRunsOnStartup(ctx context.Context) {
 	if fileExists("/etc/systemd/system/etcd2.service") {
-		s.Log(fmt.Sprintf("Not enabling etcd"))
+		s.CtxLog(ctx, fmt.Sprintf("Not enabling etcd"))
 		return
 	}
 
 	time.Sleep(time.Second * 5)
 	cmd := exec.Command("update-rc.d", "etcd", "enable")
 	err := cmd.Run()
-	s.Log(fmt.Sprintf("Updated rcd: %v", err))
+	s.CtxLog(ctx, fmt.Sprintf("Updated rcd: %v", err))
 
 	time.Sleep(time.Second * 5)
 	cmd = exec.Command("/etc/init.d/etcd", "start")
 	err = cmd.Run()
-	s.Log(fmt.Sprintf("Running etcd: %v", err))
+	s.CtxLog(ctx, fmt.Sprintf("Running etcd: %v", err))
 }
 
-func (s *Server) installGo() {
+func (s *Server) installGo(ctx context.Context) {
 	b, err := exec.Command("go", "version").Output()
 	if err != nil {
 		log.Fatalf("Unable to get output: %v", err)
@@ -359,7 +359,7 @@ func (s *Server) installGo() {
 
 	elems := strings.Fields(string(b))
 	if elems[2] != "go1.17.6" {
-		s.Log(fmt.Sprintf("Installing new go version: '%v'", string(b)))
+		s.CtxLog(ctx, fmt.Sprintf("Installing new go version: '%v'", string(b)))
 		err := exec.Command("curl", "https://raw.githubusercontent.com/brotherlogic/provisioner/master/goscript.sh", "-o", "/home/simon/goscript.sh").Run()
 		if err != nil {
 			log.Fatalf("Unable to download install script: %v", err)
@@ -375,7 +375,7 @@ func (s *Server) installGo() {
 			log.Fatalf("Bad install: %v", err)
 		}
 	} else {
-		s.Log(fmt.Sprintf("Not installing go (%v)", elems[2]))
+		s.CtxLog(ctx, fmt.Sprintf("Not installing go (%v)", elems[2]))
 	}
 }
 
@@ -384,7 +384,7 @@ const (
 	ID = "/github.com/brotherlogic/provisioner/id"
 )
 
-func (s *Server) procDisk(name string, needsFormat bool, needsMount bool, disk string) {
+func (s *Server) procDisk(ctx context.Context, name string, needsFormat bool, needsMount bool, disk string) {
 	out, err := exec.Command("tune2fs", "-l", fmt.Sprintf("/dev/%v", name)).Output()
 	if err != nil {
 		log.Fatalf("Bad run of tune2fs: %v -> %v", err, name)
@@ -399,7 +399,7 @@ func (s *Server) procDisk(name string, needsFormat bool, needsMount bool, disk s
 			if err != nil {
 				log.Fatalf("Can't parse int: %v ->%v", elems, err)
 			}
-			s.procDiskInternal(name, needsFormat, needsMount, count != 5, disk)
+			s.procDiskInternal(ctx, name, needsFormat, needsMount, count != 5, disk)
 		}
 	}
 	if !ran {
@@ -407,8 +407,8 @@ func (s *Server) procDisk(name string, needsFormat bool, needsMount bool, disk s
 	}
 }
 
-func (s *Server) procDiskInternal(name string, needsFormat bool, needsMount bool, needTuneUpdate bool, disk string) {
-	s.Log(fmt.Sprintf("Working on for %v %v, with view to formatting %v and mounting %v and tune update %v", disk, name, needsFormat, needsMount, needTuneUpdate))
+func (s *Server) procDiskInternal(ctx context.Context, name string, needsFormat bool, needsMount bool, needTuneUpdate bool, disk string) {
+	s.CtxLog(ctx, fmt.Sprintf("Working on for %v %v, with view to formatting %v and mounting %v and tune update %v", disk, name, needsFormat, needsMount, needTuneUpdate))
 
 	if needTuneUpdate {
 		b, err := exec.Command("tune2fs", "-c", "5", fmt.Sprintf("/dev/%v", name)).Output()
@@ -458,7 +458,7 @@ func (s *Server) procDiskInternal(name string, needsFormat bool, needsMount bool
 	}
 }
 
-func (s *Server) prepDisks() {
+func (s *Server) prepDisks(ctx context.Context) {
 	b, err := exec.Command("lsblk", "-o", "NAME,FSTYPE,SIZE,TYPE,MOUNTPOINT").Output()
 	if err != nil {
 		log.Fatalf("Bad run of lsblk: %v", err)
@@ -472,41 +472,50 @@ func (s *Server) prepDisks() {
 		if len(fields) >= 3 && fields[len(fields)-1] == "/" {
 			//Ensure the root partition gets prepped
 			if strings.Contains(fields[0], "sd") {
-				s.procDiskInternal(fields[0][strings.Index(fields[0], "sd"):], false, false, true, "root")
+				s.procDiskInternal(ctx, fields[0][strings.Index(fields[0], "sd"):], false, false, true, "root")
 			} else {
-				s.procDiskInternal(fields[0][strings.Index(fields[0], "mm"):], false, false, true, "root")
+				s.procDiskInternal(ctx, fields[0][strings.Index(fields[0], "mm"):], false, false, true, "root")
 			}
 
+		}
+
+		if len(fields) >= 3 && fields[len(fields)-1] == "part" && fields[len(fields)-2] == "238.4G" {
+			found = true
+			if s.Registry.Identifier == "clust2" {
+				s.procDisk(ctx, fields[0][strings.Index(fields[0], "sd"):], len(fields) != 4, len(fields) != 5, "datastore")
+			} else {
+				s.procDisk(ctx, fields[0][strings.Index(fields[0], "sd"):], len(fields) != 4, len(fields) != 5, "mongo")
+			}
 		}
 
 		// This is the WD passport drive or the samsung key drive
 		if len(fields) >= 3 && fields[len(fields)-1] == "part" &&
 			(fields[len(fields)-2] == "238.5G" || fields[len(fields)-2] == "239G" || fields[len(fields)-2] == "119.5G" || fields[len(fields)-2] == "120G") {
 			found = true
-			s.procDisk(fields[0][strings.Index(fields[0], "sd"):], len(fields) != 4, len(fields) != 5, "datastore")
+			s.procDisk(ctx, fields[0][strings.Index(fields[0], "sd"):], len(fields) != 4, len(fields) != 5, "datastore")
 		}
 
 		// This is the smaller samsung key drive
 		if len(fields) >= 3 && fields[len(fields)-1] == "part" && (fields[len(fields)-2] == "29.9G") {
 			found = true
-			s.Log(fmt.Sprintf("thing: %v with %v", fields[1], fields))
+			s.CtxLog(ctx, fmt.Sprintf("thing: %v with %v", fields[1], fields))
 			if fields[1] == "vfat" {
 				s.RaiseIssue("One disk needs formatting", fmt.Sprintf("Disk %v on %v needs to be fdisk'd", fields[0], s.Registry.Identifier))
 				time.Sleep(time.Second * 10)
 			}
-			s.procDisk(fields[0][strings.Index(fields[0], "sd"):], len(fields) != 4, len(fields) != 5, "scratch")
+			s.procDisk(ctx, fields[0][strings.Index(fields[0], "sd"):], len(fields) != 4, len(fields) != 5, "scratch")
 		}
 
 		// This is the raid disk
 		if len(fields) >= 3 && fields[len(fields)-1] == "part" && (fields[len(fields)-2] == "7.3T") {
 			found = true
-			s.procDisk(fields[0][strings.Index(fields[0], "sd"):], len(fields) != 4, len(fields) != 5, "raid")
+			s.procDisk(ctx, fields[0][strings.Index(fields[0], "sd"):], len(fields) != 4, len(fields) != 5, "raid")
 		}
 
 		// This is a cdrom
 		if len(fields) >= 3 && fields[len(fields)-1] == "rom" {
 			if !fileExists("/usr/bin/cdparanoia") {
-				s.Log("Found cd drive and installing cdparanoia")
+				s.CtxLog(ctx, "Found cd drive and installing cdparanoia")
 				b, err := exec.Command("apt", "install", "-y", "cdparanoia").Output()
 				if err != nil {
 					log.Fatalf("Cannot install cdparanoia: %v -> %v", err, string(b))
@@ -514,7 +523,7 @@ func (s *Server) prepDisks() {
 			}
 
 			if !fileExists("/usr/bin/eject") {
-				s.Log("Found cd drive and installing eject")
+				s.CtxLog(ctx, "Found cd drive and installing eject")
 				b, err := exec.Command("apt", "install", "-y", "eject").Output()
 				if err != nil {
 					log.Fatalf("Cannot install eject: %v -> %v", err, string(b))
@@ -524,11 +533,11 @@ func (s *Server) prepDisks() {
 	}
 
 	if !found {
-		s.Log(fmt.Sprintf("No disk found"))
+		s.CtxLog(ctx, fmt.Sprintf("No disk found"))
 	}
 }
 
-func (s *Server) prepPoe() {
+func (s *Server) prepPoe(ctx context.Context) {
 	file, err := os.Open("/boot/config.txt")
 	defer file.Close()
 
@@ -541,12 +550,12 @@ func (s *Server) prepPoe() {
 
 	for scanner.Scan() {
 		if strings.HasPrefix(scanner.Text(), "dtparam=poe_fan_temp0") {
-			s.Log(fmt.Sprintf("Found poe settings"))
+			s.CtxLog(ctx, fmt.Sprintf("Found poe settings"))
 			return
 		}
 	}
 
-	s.Log(fmt.Sprintf("Setting poe settings"))
+	s.CtxLog(ctx, fmt.Sprintf("Setting poe settings"))
 
 	f, err := os.OpenFile("/boot/config.txt", os.O_APPEND|os.O_WRONLY, 0644)
 	if err != nil {
@@ -583,7 +592,7 @@ func (s *Server) prepPoe() {
 	}
 }
 
-func (s *Server) prepSwap() {
+func (s *Server) prepSwap(ctx context.Context) {
 	bytes, err := exec.Command("free", "-m").Output()
 
 	if err != nil {
@@ -595,7 +604,7 @@ func (s *Server) prepSwap() {
 		fields := strings.Fields(line)
 		if len(fields) >= 2 {
 			if fields[0] == "Swap:" {
-				s.Log(fmt.Sprintf("Found Swap: %v", fields[1]))
+				s.CtxLog(ctx, fmt.Sprintf("Found Swap: %v", fields[1]))
 				if fields[1] != "0" {
 					exec.Command("dphys-swapfile", "swapoff").Run()
 					exec.Command("dphys-swapfile", "uninstall").Run()
@@ -605,21 +614,21 @@ func (s *Server) prepSwap() {
 		}
 	}
 
-	s.Log(fmt.Sprintf("No Swap adjustment needed from %v lines", len(lines)))
+	s.CtxLog(ctx, fmt.Sprintf("No Swap adjustment needed from %v lines", len(lines)))
 }
 
-func (s *Server) gui() {
+func (s *Server) gui(ctx context.Context) {
 	if !strings.Contains(s.Registry.GetIdentifier(), "display") {
 		return
 	}
 
-	s.setAutologin()
-	s.setAutoload()
+	s.setAutologin(ctx)
+	s.setAutoload(ctx)
 }
 
-func (s *Server) setAutoload() {
+func (s *Server) setAutoload(ctx context.Context) {
 	if fileExists("/home/simon/.config/lxsession/LXDE-pi/autostart") {
-		s.Log(fmt.Sprintf("Not setting auto-login"))
+		s.CtxLog(ctx, fmt.Sprintf("Not setting auto-login"))
 		return
 	}
 
@@ -674,9 +683,9 @@ func (s *Server) setAutoload() {
 	}
 }
 
-func (s *Server) setAutologin() {
+func (s *Server) setAutologin(ctx context.Context) {
 	if fileExists("/etc/systemd/system/getty@tty1.service.d/autologin.conf") {
-		s.Log(fmt.Sprintf("Not setting auto-login"))
+		s.CtxLog(ctx, fmt.Sprintf("Not setting auto-login"))
 		return
 	}
 
@@ -699,11 +708,11 @@ func (s *Server) setAutologin() {
 	}
 }
 
-func (s *Server) prepForEtcd() {
+func (s *Server) prepForEtcd(ctx context.Context) {
 
 }
 
-func (s *Server) prepForDocker() {
+func (s *Server) prepForDocker(ctx context.Context) {
 	if s.Registry.Identifier != "clust6" && s.Registry.Identifier != "clust3" && s.Registry.Identifier != "clust7" {
 		return
 	}
@@ -721,11 +730,11 @@ func (s *Server) prepForDocker() {
 			log.Fatalf("Unable to install docker: %v", err)
 		}
 
-		s.Log("Docker installed")
+		s.CtxLog(ctx, "Docker installed")
 	}
 }
 
-func (s *Server) prepForZsh() {
+func (s *Server) prepForZsh(ctx context.Context) {
 
 	bytes, err := exec.Command("apt", "install", "-y", "finger").Output()
 	if err != nil {
@@ -738,7 +747,7 @@ func (s *Server) prepForZsh() {
 	}
 
 	if strings.Contains(string(bytes), "bash") {
-		s.Log("Currently set for bash, moving to zsh")
+		s.CtxLog(ctx, "Currently set for bash, moving to zsh")
 
 		err = exec.Command("apt", "install", "-y", "zsh").Run()
 		if err != nil {
@@ -777,57 +786,60 @@ func main() {
 		return
 	}
 
+	ctx, cancel := utils.ManualContext("provisioner-init", time.Hour)
+	defer cancel()
+
 	swg := &sync.WaitGroup{}
 	swg.Add(1)
 	go func() {
 		time.Sleep(time.Second * 5)
-		server.validateRPI()
+		server.validateRPI(ctx)
 		time.Sleep(time.Second * 5)
-		server.validateNodeExporter()
+		server.validateNodeExporter(ctx)
 		time.Sleep(time.Second * 5)
-		server.confirmVM()
+		server.confirmVM(ctx)
 		time.Sleep(time.Second * 5)
-		server.installGo()
+		server.installGo(ctx)
 		time.Sleep(time.Second * 5)
-		server.installLsof()
+		server.installLsof(ctx)
 		time.Sleep(time.Second * 5)
-		server.prepDisks()
+		server.prepDisks(ctx)
 		time.Sleep(time.Second * 5)
-		server.prepPoe()
+		server.prepPoe(ctx)
 		time.Sleep(time.Second * 5)
-		server.prepSwap()
+		server.prepSwap(ctx)
 		time.Sleep(time.Second * 5)
-		server.prepForDocker()
+		server.prepForDocker(ctx)
 		time.Sleep(time.Second * 5)
-		server.gui()
+		server.gui(ctx)
 		time.Sleep(time.Second * 5)
-		server.prepForZsh()
+		server.prepForZsh(ctx)
 		time.Sleep(time.Second * 5)
 		if server.Registry.GetIdentifier() == "cd" {
-			server.installFlac()
+			server.installFlac(ctx)
 			time.Sleep(time.Second * 5)
 		}
 		if server.Registry.GetIdentifier() == "monitoring" {
-			server.installPrometheus()
+			server.installPrometheus(ctx)
 			time.Sleep(time.Second * 5)
-			server.configurePrometheus()
+			server.configurePrometheus(ctx)
 			time.Sleep(time.Second * 5)
-			server.installGrafana()
+			server.installGrafana(ctx)
 			time.Sleep(time.Second * 5)
 		} else {
-			server.Log(fmt.Sprintf("Skipping prometheus (%v)", server.Registry.GetIdentifier()))
+			server.CtxLog(ctx, fmt.Sprintf("Skipping prometheus (%v)", server.Registry.GetIdentifier()))
 			time.Sleep(time.Second * 5)
 		}
-		server.fixTimezone()
+		server.fixTimezone(ctx)
 		time.Sleep(time.Minute * 5)
-		server.Log("Completed provisioner run")
+		server.CtxLog(ctx, "Completed provisioner run")
 		swg.Done()
 	}()
 
 	if server.Registry.Identifier == "clust3" {
-		server.Log("Waiting for sync group")
+		server.CtxLog(ctx, "Waiting for sync group")
 		swg.Wait()
-		server.Log("Wait complete")
+		server.CtxLog(ctx, "Wait complete")
 	}
 
 	fmt.Printf("%v", server.Serve())
