@@ -742,24 +742,24 @@ func (s *Server) prepForMongo(ctx context.Context) {
 	// Only install if mongo is not installed
 	out, err := exec.Command("mongosh", "--version").CombinedOutput()
 	if err == nil {
-		return
+		//return
 	}
 
-	out, err = exec.Command("wget", "https://www.mongodb.org/static/pgp/server-6.0.asc", "-O", "/home/simon/server-6.0.asc").Output()
+	out, err = exec.Command("wget", "https://www.mongodb.org/static/pgp/server-4.4.asc", "-O", "/home/simon/server-6.0.asc").Output()
 	if err != nil {
 		log.Fatalf("Unable to download mongo key %v -> %v", err, string(out))
 	}
 
-	out, err = exec.Command("apt-key", "add", "/home/simon/server-6.0.asc").CombinedOutput()
+	out, err = exec.Command("apt-key", "add", "/home/simon/server-4.4.asc").CombinedOutput()
 	if err != nil {
 		log.Fatalf("Unable to install mongo  %v -> %v", err, string(out))
 	}
 
-	f, err := os.OpenFile("/etc/apt/sources.list.d/mongodb-org-6.0.list", os.O_APPEND|os.O_WRONLY|os.O_CREATE, 0644)
+	f, err := os.OpenFile("/etc/apt/sources.list.d/mongodb-org-4.4.list", os.O_APPEND|os.O_WRONLY|os.O_CREATE, 0644)
 	if err != nil {
 		log.Fatalf("OPEN CONF %v", err)
 	}
-	if _, err := f.WriteString("deb [ arch=amd64,arm64 ] https://repo.mongodb.org/apt/ubuntu focal/mongodb-org/6.0 multiverse\n"); err != nil {
+	if _, err := f.WriteString("deb [ arch=amd64,arm64 ] https://repo.mongodb.org/apt/ubuntu focal/mongodb-org/4.4 multiverse\n"); err != nil {
 		log.Fatalf("Failed to output: %v", err)
 	}
 
