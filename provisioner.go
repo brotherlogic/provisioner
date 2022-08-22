@@ -734,6 +734,31 @@ func (s *Server) prepForDocker(ctx context.Context) {
 	}
 }
 
+func (s *Server) prepForMongo(ctx context.Context) {
+	if s.Registry.Identifier != "argon" {
+		return
+	}
+
+	out, err := exec.Command("curl", "https://www.mongodb.org/static/pgp/server-6.0.asc", "-o", "/home/simon/server-6.0.asc").Output()
+	if err != nil {
+		log.Fatalf("Unable to download mongo key %v -> %v", err, string(out))
+	}
+
+	out, err = exec.Command("apt-key", "add", "/home/simon/server-6.0.asc").Output()
+	if err != nil {
+		log.Fatalf("Unable to install mongo  %v -> %v", err, string(out))
+	}
+
+	f, err := os.OpenFile("/etc/apt/sources.list.d/mongodb-org-4.4.list", os.O_APPEND|os.O_WRONLY|os.O_CREATE, 0644)
+	if err != nil {
+		log.Fatalf("OPEN CONF %v", err)
+	}
+	if _, err := f.WriteString("deb [ arch=amd64,arm64 ] https://repo.mongodb.org/apt/ubuntu focal/mongodb-org/4.4 multiverse\n"); err != nil {
+		log.Fatalf("Failed to output: %v", err)
+	}
+
+}
+
 func (s *Server) prepForZsh(ctx context.Context) {
 
 	bytes, err := exec.Command("apt", "install", "-y", "finger").Output()
@@ -830,9 +855,12 @@ func main() {
 			server.CtxLog(ctx, fmt.Sprintf("Skipping prometheus (%v)", server.Registry.GetIdentifier()))
 			time.Sleep(time.Second * 5)
 		}
+		server.prepForMongo(ctx)
+		time.Sleep(time.Second * 5)
 		server.fixTimezone(ctx)
 		time.Sleep(time.Minute * 5)
 		server.CtxLog(ctx, "Completed provisioner run")
+
 		swg.Done()
 	}()
 
