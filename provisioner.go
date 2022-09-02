@@ -292,7 +292,7 @@ func (s *Server) validateRPI(ctx context.Context) {
 	if _, err := f.WriteString("@reboot sudo /home/simon/rpi_exporter\n"); err != nil {
 		log.Fatalf("WRCR %v", err)
 	}
-	if s.Registry.Identifier == "rdisplay" {
+	if strings.Contains(s.Registry.Identifier, "display") {
 		if _, err := f.WriteString("0 * * * * sudo /etc/init.d.lightdm restart\n"); err != nil {
 			log.Fatalf("WRCR %v", err)
 		}
