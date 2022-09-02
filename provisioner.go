@@ -566,8 +566,10 @@ func (s *Server) prepPoe(ctx context.Context) {
 		log.Fatalf("WRITE %v", err)
 	}
 
-	if _, err := f.WriteString("dtoverlay=vc4-kms-dpi-hyperpixel4sq\n"); err != nil {
-		log.Fatalf("WRITE %v", err)
+	if s.Registry.Identifier == "rdisplay" {
+		if _, err := f.WriteString("dtoverlay=vc4-kms-dpi-hyperpixel4sq\n"); err != nil {
+			log.Fatalf("WRITE %v", err)
+		}
 	}
 
 	if _, err := f.WriteString("dtparam=poe_fan_temp0=75000,poe_fan_temp0_hyst=5000\n"); err != nil {
@@ -740,7 +742,7 @@ func (s *Server) prepForMongo(ctx context.Context) {
 	}
 
 	// Only install if mongo is not installed
-	_, err := exec.Command("mongosh", "--version").CombinedOutput()
+	_, err := exec.Command("mongo", "--version").CombinedOutput()
 	if err == nil {
 		//return
 	}
@@ -776,6 +778,11 @@ func (s *Server) prepForMongo(ctx context.Context) {
 	bytes, err = exec.Command("sed", "-i", "s:/var/lib/mongodb:/media/mongo/:g", "/etc/mongod.conf").CombinedOutput()
 	if err != nil {
 		log.Fatalf("Unable to run sed: %v (%v)", err, string(bytes))
+	}
+
+	bytes, err = exec.Command("chown", "-R", "mongodb:mongodb", "/media/mongo").CombinedOutput()
+	if err != nil {
+		log.Fatalf("Unable to run chown: %v (%v)", err, string(bytes))
 	}
 }
 
