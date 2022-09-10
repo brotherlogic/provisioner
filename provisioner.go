@@ -385,6 +385,9 @@ const (
 )
 
 func (s *Server) procDisk(ctx context.Context, name string, needsFormat bool, needsMount bool, disk string) {
+	if needsFormat {
+		s.procDiskInternal(ctx, name, needsFormat, needsMount, true, disk)
+	}
 	out, err := exec.Command("tune2fs", "-l", fmt.Sprintf("/dev/%v", name)).Output()
 	if err != nil {
 		log.Fatalf("Bad run of tune2fs: %v -> %v", err, name)
