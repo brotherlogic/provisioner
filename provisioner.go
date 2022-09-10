@@ -410,13 +410,6 @@ func (s *Server) procDisk(ctx context.Context, name string, needsFormat bool, ne
 func (s *Server) procDiskInternal(ctx context.Context, name string, needsFormat bool, needsMount bool, needTuneUpdate bool, disk string) {
 	s.CtxLog(ctx, fmt.Sprintf("Working on for %v %v, with view to formatting %v and mounting %v and tune update %v", disk, name, needsFormat, needsMount, needTuneUpdate))
 
-	if needTuneUpdate {
-		b, err := exec.Command("tune2fs", "-c", "5", fmt.Sprintf("/dev/%v", name)).Output()
-		if err != nil {
-			log.Fatalf("Bad run of tune2fs set: %v->%v", err, string(b))
-		}
-	}
-
 	if needsFormat {
 		b, err := exec.Command("mkfs.ext4", fmt.Sprintf("/dev/%v", name)).Output()
 		if err != nil {
@@ -453,6 +446,13 @@ func (s *Server) procDiskInternal(ctx context.Context, name string, needsFormat 
 		err = exec.Command("chown", "simon:simon", fmt.Sprintf("/media/%v", disk)).Run()
 		if err != nil {
 			log.Fatalf("CHOWN %v", err)
+		}
+
+		if needTuneUpdate {
+			b, err := exec.Command("tune2fs", "-c", "5", fmt.Sprintf("/dev/%v", name)).Output()
+			if err != nil {
+				log.Fatalf("Bad run of tune2fs set: %v->%v", err, string(b))
+			}
 		}
 
 	}
