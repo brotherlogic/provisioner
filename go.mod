@@ -3,11 +3,11 @@ module github.com/brotherlogic/provisioner
 go 1.13
 
 require (
-	github.com/brotherlogic/executor v0.0.0-20220904171107-11bfa6bafd48
-	github.com/brotherlogic/gobuildslave v0.0.0-20220912143426-76b9c9ad7e7f // indirect
-	github.com/brotherlogic/goserver v0.0.0-20220821031349-d47a1932e1b3
+	github.com/brotherlogic/executor v0.0.0-20221004171723-b3848b6cf60d
+	github.com/brotherlogic/goserver v0.0.0-20220930143508-9c9ff6258bec
 	github.com/golang/protobuf v1.5.2
-	golang.org/x/net v0.0.0-20220909164309-bea034e7d591
-	google.golang.org/grpc v1.49.0
+	golang.org/x/net v0.0.0-20221004154528-8021a29435af
+	golang.org/x/sys v0.0.0-20221006211917-84dc82d7e875 // indirect
+	google.golang.org/grpc v1.50.0
 	google.golang.org/protobuf v1.28.1
 )
