@@ -22,7 +22,7 @@ import (
 	pbg "github.com/brotherlogic/goserver/proto"
 )
 
-//Server main server type
+// Server main server type
 type Server struct {
 	*goserver.GoServer
 }
@@ -360,9 +360,16 @@ func (s *Server) installGo(ctx context.Context) {
 	elems := strings.Fields(string(b))
 	if elems[2] != "go1.19.2" {
 		s.CtxLog(ctx, fmt.Sprintf("Installing new go version: '%v'", string(b)))
-		err := exec.Command("curl", "https://raw.githubusercontent.com/brotherlogic/provisioner/master/goscript.sh", "-o", "/home/simon/goscript.sh").Run()
-		if err != nil {
-			log.Fatalf("Unable to download install script: %v", err)
+		if s.Bits == 64 {
+			err := exec.Command("curl", "https://raw.githubusercontent.com/brotherlogic/provisioner/master/goscript64.sh", "-o", "/home/simon/goscript.sh").Run()
+			if err != nil {
+				log.Fatalf("Unable to download install script: %v", err)
+			}
+		} else {
+			err := exec.Command("curl", "https://raw.githubusercontent.com/brotherlogic/provisioner/master/goscript.sh", "-o", "/home/simon/goscript.sh").Run()
+			if err != nil {
+				log.Fatalf("Unable to download install script: %v", err)
+			}
 		}
 
 		err = exec.Command("chmod", "u+x", "/home/simon/goscript.sh").Run()
