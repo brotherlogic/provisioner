@@ -614,8 +614,8 @@ github.com/brotherlogic/executor v0.0.0-20220819183033-34ecaff4af8d/go.mod h1:1I
 github.com/brotherlogic/executor v0.0.0-20220819190345-addbd70acdcd/go.mod h1:mAcUtIP7m7qxsVJAeTiSY/8x+4tOUTL3tbmkRfNuck4=
 github.com/brotherlogic/executor v0.0.0-20220904171107-11bfa6bafd48/go.mod h1:v/RQE6JpzwMNK8Pe0+wQKXvYM8nx347M/M3OvLolLsU=
 github.com/brotherlogic/executor v0.0.0-20221004171723-b3848b6cf60d/go.mod h1:4cyWs0tjZ/r7y3E0L9jATxbjsjLlTR5CG3oEpkMVows=
-github.com/brotherlogic/executor v0.0.0-20221128050418-f5cac151d593 h1:TyPbD1ggsFZzuWkfUOJrEq0BCF71mPlX8f70uU06RU8=
-github.com/brotherlogic/executor v0.0.0-20221128050418-f5cac151d593/go.mod h1:UUB5yZWpMuJyoZ08qYgkwz3wREpcfdGVFGGWS7zN9p8=
+github.com/brotherlogic/executor v0.0.0-20221128053102-b6c09980b0e2 h1:9ljykgCMP7YhxEMZw02YAd8XsfqAJMT2ECkrNzDmxp0=
+github.com/brotherlogic/executor v0.0.0-20221128053102-b6c09980b0e2/go.mod h1:fY7QCYDlVzDHGrhdS4Jp7Z9SBprwgRAJ2X+A+/pP0sQ=
 github.com/brotherlogic/filecopier v0.0.0-20201006222739-09abeee3f6b2/go.mod h1:saBy/E0zc3DFPBq8dcJuUbbm/YKK3eUafRXyL16eQtg=
 github.com/brotherlogic/filecopier v0.0.0-20210606153512-1857ee50062e/go.mod h1:Op6UH0OMFMAF8RG4HpU3lSPBWQy1WtA1PVv4LpMoMCI=
 github.com/brotherlogic/filecopier v0.0.0-20210613062201-d489ba870e4e/go.mod h1:+k+ql2HVqbhGZYVg2EYmXOaBxcEFtRn6yY+RI8p+s4s=
