@@ -275,7 +275,7 @@ func (s *Server) validateRPI(ctx context.Context) {
 		return
 	}
 
-	cmd := exec.Command("go", "get", "github.com/lukasmalkmus/rpi_exporter")
+	cmd := exec.Command("go", "install", "github.com/lukasmalkmus/rpi_exporter@latest")
 	bytes, err := cmd.Output()
 	s.CtxLog(ctx, fmt.Sprintf("Ran plain go get command: %v (%v)", err, string(bytes)))
 	time.Sleep(time.Second * 10)
