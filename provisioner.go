@@ -491,11 +491,7 @@ func (s *Server) prepDisks(ctx context.Context) {
 
 		if len(fields) >= 3 && fields[len(fields)-1] == "part" && fields[len(fields)-2] == "238.4G" {
 			found = true
-			if s.Registry.Identifier == "clust2" {
-				s.procDisk(ctx, fields[0][strings.Index(fields[0], "sd"):], len(fields) != 4, len(fields) != 5, "datastore")
-			} else {
-				s.procDisk(ctx, fields[0][strings.Index(fields[0], "sd"):], len(fields) != 4, len(fields) != 5, "mongo")
-			}
+			s.procDisk(ctx, fields[0][strings.Index(fields[0], "sd"):], len(fields) != 4, len(fields) != 5, "datastore")
 		}
 
 		// This is the WD passport drive or the samsung key drive
@@ -747,7 +743,7 @@ func (s *Server) prepForDocker(ctx context.Context) {
 }
 
 func (s *Server) prepForMongo(ctx context.Context) {
-	if s.Registry.Identifier != "argon" {
+	if s.Registry.Identifier != "skipper" {
 		return
 	}
 
