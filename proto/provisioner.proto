@@ -11,5 +11,5 @@ message ClusterResponse {
 }
 
 service CluserService {
-  rpc Cluster(ClusterRequest) returns (ClusterResponse) {};
+  
 }
