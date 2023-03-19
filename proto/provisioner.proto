@@ -4,11 +4,7 @@ package provisioner;
 
 option go_package = "github.com/brotherlogic/provisioner/proto";
 
-message ClusterRequest {}
 
-message ClusterResponse {
-  string to_add = 1;
-}
 
 service CluserService {
   
