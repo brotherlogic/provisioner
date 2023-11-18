@@ -3,7 +3,7 @@ module github.com/brotherlogic/provisioner
 go 1.13
 
 require (
-	github.com/brotherlogic/datastore v0.0.0-20231118111953-ad6fc0b3772e // indirect
+	github.com/brotherlogic/datastore v0.0.0-20231118124114-16762a8d57b0 // indirect
 	github.com/brotherlogic/executor v0.0.0-20231117040312-cb1f6092fd5d
 	github.com/brotherlogic/goserver v0.0.0-20230726200050-779ae6811580
 	golang.org/x/net v0.18.0
