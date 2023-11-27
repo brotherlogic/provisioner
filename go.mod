@@ -3,9 +3,9 @@ module github.com/brotherlogic/provisioner
 go 1.13
 
 require (
-	github.com/brotherlogic/datastore v0.0.0-20231127011738-301c042401f1 // indirect
 	github.com/brotherlogic/executor v0.0.0-20231125234456-48efd26d3c97
 	github.com/brotherlogic/goserver v0.0.0-20230726200050-779ae6811580
+	github.com/brotherlogic/lock v0.0.0-20231127021037-b964c37bc51c // indirect
 	golang.org/x/net v0.18.0
 	google.golang.org/grpc v1.59.0
 	google.golang.org/protobuf v1.31.0
