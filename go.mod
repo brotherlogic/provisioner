@@ -5,7 +5,7 @@ go 1.21
 toolchain go1.22.1
 
 require (
-	github.com/brotherlogic/executor v0.0.0-20240507154133-0e0a2ba13d71
+	github.com/brotherlogic/executor v0.0.0-20240516235122-a324d63ff1dd
 	github.com/brotherlogic/goserver v0.0.0-20240303220030-80da220f0393
 	golang.org/x/net v0.25.0
 	google.golang.org/grpc v1.64.0
