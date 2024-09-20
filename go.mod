@@ -8,7 +8,7 @@ require (
 	github.com/brotherlogic/executor v0.0.0-20240913233617-7a68013b3ef5
 	github.com/brotherlogic/goserver v0.0.0-20240826215223-fccbac46b3d4
 	golang.org/x/net v0.29.0
-	google.golang.org/grpc v1.66.2
+	google.golang.org/grpc v1.67.0
 	google.golang.org/protobuf v1.34.2
 )
 
