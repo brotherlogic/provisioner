@@ -3,7 +3,7 @@ module github.com/brotherlogic/provisioner
 go 1.23.2
 
 require (
-	github.com/brotherlogic/executor v0.0.0-20241225095509-84ca536d3128
+	github.com/brotherlogic/executor v0.0.0-20241225114119-a5560b07b544
 	github.com/brotherlogic/goserver v0.0.0-20240826215223-fccbac46b3d4
 	golang.org/x/net v0.33.0
 	google.golang.org/grpc v1.69.2
@@ -12,11 +12,11 @@ require (
 
 require (
 	github.com/beorn7/perks v1.0.1 // indirect
-	github.com/brotherlogic/buildserver v0.0.0-20241225084228-9a5993f125e0 // indirect
+	github.com/brotherlogic/buildserver v0.0.0-20241225114413-d985e0014e36 // indirect
 	github.com/brotherlogic/datastore v0.0.0-20241220230045-434035a99d2b // indirect
 	github.com/brotherlogic/discovery v0.0.0-20241109204028-02908558af09 // indirect
 	github.com/brotherlogic/dstore v0.0.0-20241225105523-370c8a660bf6 // indirect
-	github.com/brotherlogic/githubcard v0.0.0-20241225084108-fd54951bf4ee // indirect
+	github.com/brotherlogic/githubcard v0.0.0-20241225114239-9ab179f31e7a // indirect
 	github.com/brotherlogic/githubridge v0.2824.0 // indirect
 	github.com/brotherlogic/gobuildslave v0.0.0-20241111085829-8d4e5069a7fd // indirect
 	github.com/brotherlogic/keystore v0.0.0-20240508161349-814b3200b126 // indirect
