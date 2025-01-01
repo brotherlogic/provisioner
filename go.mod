@@ -3,7 +3,7 @@ module github.com/brotherlogic/provisioner
 go 1.23.2
 
 require (
-	github.com/brotherlogic/executor v0.0.0-20250101022816-5dff2f2b98e6
+	github.com/brotherlogic/executor v0.0.0-20250101032209-002b54acd80d
 	github.com/brotherlogic/goserver v0.0.0-20240826215223-fccbac46b3d4
 	golang.org/x/net v0.33.0
 	google.golang.org/grpc v1.69.2
