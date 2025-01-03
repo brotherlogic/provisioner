@@ -358,7 +358,7 @@ func (s *Server) installGo(ctx context.Context) {
 	}
 
 	elems := strings.Fields(string(b))
-	if elems[2] != "go1.23.2" {
+	if elems[2] != "go1.23.4" {
 		s.CtxLog(ctx, fmt.Sprintf("Installing new go version: '%v'", string(b)))
 		if s.Bits == 64 {
 			err := exec.Command("curl", "https://raw.githubusercontent.com/brotherlogic/provisioner/master/goscript64.sh", "-o", "/home/simon/goscript.sh").Run()
