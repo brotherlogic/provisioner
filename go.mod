@@ -3,7 +3,7 @@ module github.com/brotherlogic/provisioner
 go 1.23.2
 
 require (
-	github.com/brotherlogic/executor v0.0.0-20250222050406-2f1de4e4eef8
+	github.com/brotherlogic/executor v0.0.0-20250222055003-474ad115aa27
 	github.com/brotherlogic/goserver v0.0.0-20250123145056-95c6fbb2310a
 	golang.org/x/net v0.35.0
 	google.golang.org/grpc v1.70.0
@@ -18,10 +18,10 @@ require (
 	github.com/brotherlogic/dstore v0.0.0-20250222050600-310182f998ba // indirect
 	github.com/brotherlogic/githubcard v0.0.0-20250222014924-3cfe63fd2e81 // indirect
 	github.com/brotherlogic/githubridge v0.2848.0 // indirect
-	github.com/brotherlogic/gobuildslave v0.0.0-20250222050439-1cc2809993d2 // indirect
+	github.com/brotherlogic/gobuildslave v0.0.0-20250222054702-74dc1153367f // indirect
 	github.com/brotherlogic/keystore v0.0.0-20240508161349-814b3200b126 // indirect
 	github.com/brotherlogic/lock v0.0.0-20250222031327-ff1a0026fe7f // indirect
-	github.com/brotherlogic/logging v0.0.0-20250222050415-0de9f9bd1b15 // indirect
+	github.com/brotherlogic/logging v0.0.0-20250222054522-01bf5fcb622b // indirect
 	github.com/brotherlogic/monitor v0.0.0-20221025152653-c10877c5f9e6 // indirect
 	github.com/brotherlogic/versionserver v0.0.0-20221025154054-c9bcd41be2f2 // indirect
 	github.com/cespare/xxhash/v2 v2.3.0 // indirect
