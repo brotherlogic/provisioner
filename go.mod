@@ -12,7 +12,7 @@ require (
 
 require (
 	github.com/beorn7/perks v1.0.1 // indirect
-	github.com/brotherlogic/buildserver v0.0.0-20250311130836-74755cd63927 // indirect
+	github.com/brotherlogic/buildserver v0.0.0-20250311174456-937715ec5105 // indirect
 	github.com/brotherlogic/datastore v0.0.0-20250113225754-a9cab19c721e // indirect
 	github.com/brotherlogic/discovery v0.0.0-20241109204028-02908558af09 // indirect
 	github.com/brotherlogic/dstore v0.0.0-20250311165512-b67a931c2f3c // indirect
@@ -36,5 +36,5 @@ require (
 	github.com/struCoder/pidusage v0.2.1 // indirect
 	golang.org/x/sys v0.31.0 // indirect
 	golang.org/x/text v0.23.0 // indirect
-	google.golang.org/genproto/googleapis/rpc v0.0.0-20250303144028-a0af3efb3deb // indirect
+	google.golang.org/genproto/googleapis/rpc v0.0.0-20250311173030-29e43e6258d7 // indirect
 )
