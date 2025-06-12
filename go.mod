@@ -14,13 +14,13 @@ require (
 	github.com/beorn7/perks v1.0.1 // indirect
 	github.com/brotherlogic/buildserver v0.0.0-20250611175045-954b6fd4d134 // indirect
 	github.com/brotherlogic/datastore v0.0.0-20250610012354-722a6beaa331 // indirect
-	github.com/brotherlogic/discovery v0.0.0-20250612092729-09ab8f95c557 // indirect
-	github.com/brotherlogic/dstore v0.0.0-20250612100413-2d6a86041ee6 // indirect
+	github.com/brotherlogic/discovery v0.0.0-20250612132403-6543f21efabc // indirect
+	github.com/brotherlogic/dstore v0.0.0-20250612130443-f24b77bd13ca // indirect
 	github.com/brotherlogic/githubcard v0.0.0-20250610012841-452c31c6d6aa // indirect
 	github.com/brotherlogic/githubridge v0.2865.0 // indirect
 	github.com/brotherlogic/gobuildslave v0.0.0-20250611041132-063762a80ea1 // indirect
 	github.com/brotherlogic/keystore v0.0.0-20240508161349-814b3200b126 // indirect
-	github.com/brotherlogic/lock v0.0.0-20250612055715-df40fd1c3b18 // indirect
+	github.com/brotherlogic/lock v0.0.0-20250612123010-4fe57d73a068 // indirect
 	github.com/brotherlogic/logging v0.0.0-20250610135652-2fe05658d78a // indirect
 	github.com/brotherlogic/monitor v0.0.0-20221025152653-c10877c5f9e6 // indirect
 	github.com/brotherlogic/versionserver v0.0.0-20221025154054-c9bcd41be2f2 // indirect
