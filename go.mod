@@ -3,7 +3,7 @@ module github.com/brotherlogic/provisioner
 go 1.24.4
 
 require (
-	github.com/brotherlogic/executor v0.0.0-20250629072521-46964cfa821a
+	github.com/brotherlogic/executor v0.0.0-20250704235235-2e9fec209067
 	github.com/brotherlogic/goserver v0.0.0-20250608182006-4ace595931a5
 	golang.org/x/net v0.41.0
 	google.golang.org/grpc v1.73.0
@@ -12,11 +12,11 @@ require (
 
 require (
 	github.com/beorn7/perks v1.0.1 // indirect
-	github.com/brotherlogic/buildserver v0.0.0-20250629051854-162a9c26c9c5 // indirect
+	github.com/brotherlogic/buildserver v0.0.0-20250630222042-5d9e9464cfeb // indirect
 	github.com/brotherlogic/datastore v0.0.0-20250610012354-722a6beaa331 // indirect
 	github.com/brotherlogic/discovery v0.0.0-20250613142713-1dac6d7d6bdd // indirect
 	github.com/brotherlogic/dstore v0.0.0-20250613140516-5b29ccb83705 // indirect
-	github.com/brotherlogic/githubcard v0.0.0-20250628144502-a9135f09c106 // indirect
+	github.com/brotherlogic/githubcard v0.0.0-20250704235146-12ffedefd874 // indirect
 	github.com/brotherlogic/githubridge v0.2865.0 // indirect
 	github.com/brotherlogic/gobuildslave v0.0.0-20250617150904-f41a1af90c2d // indirect
 	github.com/brotherlogic/keystore v0.0.0-20240508161349-814b3200b126 // indirect
@@ -31,7 +31,7 @@ require (
 	github.com/prometheus/client_golang v1.22.0 // indirect
 	github.com/prometheus/client_model v0.6.2 // indirect
 	github.com/prometheus/common v0.65.0 // indirect
-	github.com/prometheus/procfs v0.16.1 // indirect
+	github.com/prometheus/procfs v0.17.0 // indirect
 	github.com/struCoder/pidusage v0.2.1 // indirect
 	golang.org/x/sys v0.33.0 // indirect
 	golang.org/x/text v0.26.0 // indirect
