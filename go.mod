@@ -1,6 +1,6 @@
 module github.com/brotherlogic/provisioner
 
-go 1.24.4
+go 1.25.8
 
 require (
 	github.com/brotherlogic/executor v0.0.0-20250808234248-82cd8e43a5f3
